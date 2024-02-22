@@ -49,5 +49,10 @@ public class CameraController : MonoBehaviour
         transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
         player.transform.Rotate(0f, mouseX, 0f);
     }
+
+    public Ray GetSightRay()
+    {
+        return new Ray(transform.position, transform.forward);
+    }
     
 }
