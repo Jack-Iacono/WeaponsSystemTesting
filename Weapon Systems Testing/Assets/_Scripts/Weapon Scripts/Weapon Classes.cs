@@ -10,23 +10,33 @@ public abstract class Weapon : ScriptableObject
     public new string name;
     public string tooltip;
 
-    public float useTime;
+    public float primaryUseTime;
+    public float secondaryUseTime;
+    protected const string primaryUseKey = "primaryUseTime";
+    protected const string secondaryUseKey = "secondaryUseTime";
+    protected bool primaryReady = true;
+    protected bool secondaryReady = true;
 
     public int modBudget;
 
+    protected TimerManager timerManager = new TimerManager();
+
+    public virtual void Intialize(WeaponController weapon) 
+    {
+        controller = weapon;
+
+        timerManager.Add(primaryUseKey, new Timer(primaryUseTime, PrimaryTimerEnd));
+        timerManager.Add(secondaryUseKey, new Timer(secondaryUseTime, SecondaryTimerEnd));
+    }
+    public virtual void UpdateWeapon(float dt) { timerManager.IncrementTimers(dt); }
+
     public abstract void UsePrimary();
     public abstract void UseSecondary();
-    public abstract void UseTertiary();
 
-    public abstract void UpdateWeapon(float dt);
-
-    // Attachment Get/Set Methods
-
-    public void SetWeaponController(WeaponController w)
-    {
-        controller = w;
-    }
+    public virtual void PrimaryTimerEnd() { }
+    public virtual void SecondaryTimerEnd() { }
 }
+
 public abstract class RangedWeapon : Weapon
 {
     [Header("Basic Gun Stats")]

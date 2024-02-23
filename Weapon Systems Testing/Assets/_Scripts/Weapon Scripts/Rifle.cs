@@ -5,20 +5,29 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Data", menuName = "ScriptableObjects/Weapon/Ranged Weapon/Gun/Rifle", order = 1)]
 public class Rifle : Gun
 {
-    public override void UpdateWeapon(float dt)
-    {
-        
-    }
-
     public override void UsePrimary()
     {
-        if(isHitScan)
+        if (primaryReady)
         {
-            RaycastHit hit;
-
-            if (Physics.Raycast(controller.cameraController.GetSightRay(), out hit, 1000, controller.hitLayers))
+            if (isHitScan)
             {
-                Debug.Log(hit.collider.name);
+                RaycastHit hit;
+
+                if (Physics.Raycast(controller.cameraController.GetSightRay(), out hit, 1000, controller.hitLayers))
+                {
+                    Debug.Log(hit.collider.name);
+                }
+
+                primaryReady = false;
+                timerManager.timers[primaryUseKey].Start();
+            }
+            else
+            {
+                GameObject projectile = ObjectPool.instance.GetPooledObject("TestProjectile");
+
+                projectile.transform.position = controller.transform.position;
+                projectile.SetActive(true);
+                projectile.GetComponent<Rigidbody>().AddForce(Vector3.up * 20);
             }
         }
     }
@@ -26,8 +35,10 @@ public class Rifle : Gun
     {
         throw new System.NotImplementedException();
     }
-    public override void UseTertiary()
+
+    public override void PrimaryTimerEnd()
     {
-        throw new System.NotImplementedException();
+        primaryReady = true;
+        Debug.Log("Test");
     }
 }

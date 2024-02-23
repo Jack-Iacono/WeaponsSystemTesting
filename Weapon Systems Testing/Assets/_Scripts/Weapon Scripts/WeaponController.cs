@@ -12,7 +12,7 @@ public class WeaponController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        currentWeapon.SetWeaponController(this);
+        currentWeapon.Intialize(this);
     }
 
     // Update is called once per frame
