@@ -8,8 +8,11 @@ public class Projectile : ScriptableObject
 {
     private ProjectileController controller;
 
-    public bool contactDestroy;
     public float projectileLifetime;
+
+    public bool contactDestroy;
+    public bool bounce;
+    public float bounceAmp;
 
     public LayerMask interactLayers;
 

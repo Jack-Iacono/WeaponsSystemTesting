@@ -25,7 +25,15 @@ public class ProjectileController : MonoBehaviour
     {
         if (HelperScripts.LayermaskContains(projectile.interactLayers, collision.gameObject.layer))
         {
-            StopProjectile();
+            if (projectile.contactDestroy)
+            {
+                StopProjectile();
+            }
+            else
+            {
+                // stupid bounce stuff
+                rb.AddForce(collision.GetContact(0).normal * rb.velocity.magnitude * projectile.bounceAmp);
+            }
         }
     }
 

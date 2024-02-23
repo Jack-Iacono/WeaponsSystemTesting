@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 887cca2dce1948149a271f76546cc79b, type: 3}
   m_Name: Basic Projectile
   m_EditorClassIdentifier: 
-  contactDestroy: 1
-  projectileLifetime: 1
+  projectileLifetime: 10
+  contactDestroy: 0
+  bounce: 0
+  bounceAmp: 1
   interactLayers:
     serializedVersion: 2
     m_Bits: 1
