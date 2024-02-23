@@ -19,4 +19,8 @@ public static class HelperScripts
             return f;
         }
     }
+    public static bool LayermaskContains(LayerMask layerMask, int layer)
+    {
+        return layerMask == (layerMask | 1 << layer);
+    }
 }

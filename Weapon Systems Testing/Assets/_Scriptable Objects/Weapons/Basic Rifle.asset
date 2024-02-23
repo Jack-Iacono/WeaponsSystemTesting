@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Basic Rifle
   tooltip: Just your standard rifle
-  autoUse: 1
-  primaryUseTime: 1
+  autoUse: 0
+  primaryUseTime: 0.5
   secondaryUseTime: 0
   modBudget: 0
   damage: 0

@@ -87,14 +87,12 @@ public abstract class Gun : RangedWeapon
             }
             else
             {
-                GameObject projectile = ObjectPool.instance.GetPooledObject("TestProjectile");
+                GameObject projectile = ObjectPool.instance.GetPooledObject(spawnedProjectile.name);
 
                 projectile.transform.position = controller.projectileSpawnPoint.position;
-                projectile.SetActive(true);
+                projectile.transform.rotation = controller.projectileSpawnPoint.rotation;
 
-                var rb = projectile.GetComponent<Rigidbody>();
-                rb.mass = projectileMass;
-                rb.AddForce(controller.cameraController.transform.forward * projectileSpeed);
+                projectile.GetComponent<ProjectileController>().StartProjectile(controller.cameraController.transform.forward * projectileSpeed, projectileMass);
             }
 
             primaryReady = false;

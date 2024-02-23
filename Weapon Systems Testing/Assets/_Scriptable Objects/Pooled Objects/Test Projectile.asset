@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 18d0541cc2a54724682de25702c33655, type: 3}
-  m_Name: TestProjectile
+  m_Name: Test Projectile
   m_EditorClassIdentifier: 
-  pooledName: TestProjectile
+  pooledName: Test Projectile
   obj: {fileID: 3056892880183917614, guid: a6647a167c3be3545bfca6f9f2e0501a, type: 3}
   poolCount: 10

@@ -17,6 +17,8 @@ public class Timer
         this.max = max;
         current = max;
 
+        timerRunning = false;
+
         this.endCallback = endCallback;
     }
 
@@ -32,8 +34,7 @@ public class Timer
 
             if (current <= 0)
             {
-                current = -1;
-                timerRunning = false;
+                Stop();
 
                 // Calls the registered callback function
                 endCallback();
@@ -117,6 +118,10 @@ public class TimerManager
     public void Remove(string name)
     {
         timers.Remove(name);
+    }
+    public bool ContainsKey(string name)
+    {
+        return timers.ContainsKey(name);
     }
 }
 

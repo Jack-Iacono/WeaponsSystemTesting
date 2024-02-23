@@ -23,7 +23,7 @@ public class ObjectPool : MonoBehaviour
         // Runs through each of the desired objects to pool
         foreach(PooledObject p in _objectsToPool)
         {
-            GameObject parent = new GameObject("Pooled Object: " + p.pooledName);
+            GameObject parent = new GameObject("Pooled Object: " + p.obj.name);
             parent.transform.parent = transform;
 
             // Creates an empty list
@@ -32,11 +32,13 @@ public class ObjectPool : MonoBehaviour
             // Populates the list with the right amount of gameobjects
             for(int i = 0; i < p.poolCount; i++)
             {
-                obj.Add(InstantiateObject(p.obj, parent.transform));
+                var inst = InstantiateObject(p.obj, parent.transform);
+                inst.name += " " + i;
+                obj.Add(inst);
             }
 
             // Adds the item to the dictionary
-            _pooledObjects.Add(p.pooledName, obj);
+            _pooledObjects.Add(p.obj.name, obj);
         }
     }
 
