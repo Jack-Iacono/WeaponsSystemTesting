@@ -10,6 +10,8 @@ public abstract class Weapon : ScriptableObject
     public new string name;
     public string tooltip;
 
+    public bool autoUse;
+
     public float primaryUseTime;
     public float secondaryUseTime;
     protected const string primaryUseKey = "primaryUseTime";
@@ -27,6 +29,9 @@ public abstract class Weapon : ScriptableObject
 
         timerManager.Add(primaryUseKey, new Timer(primaryUseTime, PrimaryTimerEnd));
         timerManager.Add(secondaryUseKey, new Timer(secondaryUseTime, SecondaryTimerEnd));
+
+        primaryReady = true;
+        secondaryReady = true;
     }
     public virtual void UpdateWeapon(float dt) { timerManager.IncrementTimers(dt); }
 
@@ -39,7 +44,7 @@ public abstract class Weapon : ScriptableObject
 
 public abstract class RangedWeapon : Weapon
 {
-    [Header("Basic Gun Stats")]
+    [Header("Basic Ranged Weapon Stats")]
     public float damage;
     public float range;
     public float recoil;
@@ -62,8 +67,47 @@ public abstract class RangedWeapon : Weapon
     [Header("Firing Mode Stats")]
     public bool isHitScan;
     public GameObject spawnedProjectile;
+    public float projectileSpeed;
+    public float projectileMass;
 }
 public abstract class Gun : RangedWeapon
 {
-    // Implement Gun Specific Stuff
+    public override void UsePrimary()
+    {
+        if (primaryReady)
+        {
+            if (isHitScan)
+            {
+                RaycastHit hit;
+
+                if (Physics.Raycast(controller.cameraController.GetSightRay(), out hit, 1000, controller.hitLayers))
+                {
+                    Debug.Log(hit.collider.name);
+                }
+            }
+            else
+            {
+                GameObject projectile = ObjectPool.instance.GetPooledObject("TestProjectile");
+
+                projectile.transform.position = controller.projectileSpawnPoint.position;
+                projectile.SetActive(true);
+
+                var rb = projectile.GetComponent<Rigidbody>();
+                rb.mass = projectileMass;
+                rb.AddForce(controller.cameraController.transform.forward * projectileSpeed);
+            }
+
+            primaryReady = false;
+            timerManager.timers[primaryUseKey].Start();
+        }
+    }
+    public override void UseSecondary()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override void PrimaryTimerEnd()
+    {
+        primaryReady = true;
+    }
 }

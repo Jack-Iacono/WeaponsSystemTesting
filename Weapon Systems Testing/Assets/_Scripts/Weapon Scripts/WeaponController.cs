@@ -7,6 +7,8 @@ public class WeaponController : MonoBehaviour
     public Weapon currentWeapon;
     public CameraController cameraController;
 
+    public Transform projectileSpawnPoint;
+
     public LayerMask hitLayers;
 
     // Start is called before the first frame update
@@ -18,7 +20,11 @@ public class WeaponController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (currentWeapon.autoUse && Input.GetKey(KeyCode.Mouse0))
+        {
+            currentWeapon.UsePrimary();
+        }
+        else if(!currentWeapon.autoUse && Input.GetKeyDown(KeyCode.Mouse0))
         {
             currentWeapon.UsePrimary();
         }
