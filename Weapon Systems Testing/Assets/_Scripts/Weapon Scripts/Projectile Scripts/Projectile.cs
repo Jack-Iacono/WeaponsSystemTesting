@@ -10,8 +10,8 @@ public class Projectile : ScriptableObject
 
     public float projectileLifetime;
 
-    public bool contactDestroy;
-    public bool bounce;
+    public enum CollisionAction { DESTROY, BOUNCE };
+    public CollisionAction collisionAction;
     public float bounceAmp;
 
     public LayerMask interactLayers;

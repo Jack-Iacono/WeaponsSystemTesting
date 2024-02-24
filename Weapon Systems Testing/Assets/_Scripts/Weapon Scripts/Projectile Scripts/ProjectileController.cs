@@ -5,12 +5,11 @@ using UnityEngine;
 public class ProjectileController : MonoBehaviour
 {
     public Projectile projectile;
-    private Rigidbody rb;
+    public Rigidbody rb;
 
+    private Vector3 velocityStore = Vector3.zero;
     public void Initialize()
     {
-        rb = GetComponent<Rigidbody>();
-
         // Instantiates a new projectile script
         projectile = Instantiate(projectile);
         projectile.ProjectileInitialize(this);
@@ -20,31 +19,44 @@ public class ProjectileController : MonoBehaviour
     {
         projectile.ProjectileUpdate(Time.deltaTime);
     }
+    private void LateUpdate()
+    {
+        velocityStore = rb.velocity;
+    }
 
     private void OnCollisionEnter(Collision collision)
     {
         if (HelperScripts.LayermaskContains(projectile.interactLayers, collision.gameObject.layer))
         {
-            if (projectile.contactDestroy)
+            switch (projectile.collisionAction)
             {
-                StopProjectile();
-            }
-            else
-            {
-                // stupid bounce stuff
-                rb.AddForce(collision.GetContact(0).normal * rb.velocity.magnitude * projectile.bounceAmp);
+                case Projectile.CollisionAction.DESTROY:
+                    StopProjectile();
+                    break;
+                case Projectile.CollisionAction.BOUNCE:
+                    Vector3 normal = collision.GetContact(0).normal;
+                    Vector3 bounce = new Vector3(normal.x * Mathf.Abs(velocityStore.x), normal.y * Mathf.Abs(velocityStore.y), normal.z * Mathf.Abs(velocityStore.z));
+
+                    // stupid bounce stuff
+                    rb.AddForce(bounce * projectile.bounceAmp);
+                    break;
             }
         }
     }
 
-    public void StartProjectile(Vector3 velocity, float mass)
+    public void StartProjectile(Transform spawnPoint, Vector3 velocity, float mass)
     {
         gameObject.SetActive(true);
 
         rb.mass = mass;
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
-        rb.AddForce(velocity);
+
+        rb.MovePosition(spawnPoint.position);
+        rb.MoveRotation(spawnPoint.rotation);
+
+        //rb.AddForce(velocity);
+        rb.velocity = velocity;
 
         projectile.StartProjectile();
     }
