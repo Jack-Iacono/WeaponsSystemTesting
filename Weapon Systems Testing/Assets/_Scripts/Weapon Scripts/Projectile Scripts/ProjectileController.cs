@@ -1,11 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ProjectileController : MonoBehaviour
+public class ProjectileController : MonoBehaviour, Interactable
 {
     public Projectile projectile;
     public Rigidbody rb;
+
+    public Weapon parentWeapon { get; private set; }
 
     private Vector3 velocityStore = Vector3.zero;
     public void Initialize()
@@ -28,25 +31,29 @@ public class ProjectileController : MonoBehaviour
     {
         if (HelperScripts.LayermaskContains(projectile.interactLayers, collision.gameObject.layer))
         {
+            Interactable col;
+
+            if (collision.gameObject.TryGetComponent(out col))
+                col.ProjectileHit(this);
+
+            // Unique Interactions for each collision action
             switch (projectile.collisionAction)
             {
                 case Projectile.CollisionAction.DESTROY:
                     StopProjectile();
                     break;
                 case Projectile.CollisionAction.BOUNCE:
-                    Vector3 normal = collision.GetContact(0).normal;
-                    Vector3 bounce = new Vector3(normal.x * Mathf.Abs(velocityStore.x), normal.y * Mathf.Abs(velocityStore.y), normal.z * Mathf.Abs(velocityStore.z));
-
-                    // stupid bounce stuff
-                    rb.AddForce(bounce * projectile.bounceAmp);
+                    
                     break;
             }
         }
     }
 
-    public void StartProjectile(Transform spawnPoint, Vector3 velocity, float mass)
+    public void StartProjectile(Weapon parentWeapon, Transform spawnPoint, Vector3 velocity, float mass = 1)
     {
         gameObject.SetActive(true);
+
+        this.parentWeapon = parentWeapon;
 
         rb.mass = mass;
         rb.velocity = Vector3.zero;

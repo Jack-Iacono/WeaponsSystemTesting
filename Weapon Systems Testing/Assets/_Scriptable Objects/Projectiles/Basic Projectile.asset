@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Basic Projectile
   m_EditorClassIdentifier: 
   projectileLifetime: 3
-  collisionAction: 0
+  collisionAction: 1
   bounceAmp: 30
   interactLayers:
     serializedVersion: 2
