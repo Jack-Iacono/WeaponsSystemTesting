@@ -7,6 +7,6 @@ public abstract class Enemy : MonoBehaviour, Interactable
 {
     public virtual void ProjectileHit(ProjectileController projectile)
     {
-        Debug.Log($"Hit by {projectile.parentFrame.name} for {projectile.parentFrame.damage} damage");
+        Debug.Log($"Hit by {projectile.parentFrame.name} for {projectile.parentFrame.currentStats.damage} damage");
     }
 }

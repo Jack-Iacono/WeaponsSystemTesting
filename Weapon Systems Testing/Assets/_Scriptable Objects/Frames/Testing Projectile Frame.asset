@@ -12,27 +12,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5db3968599789f2418d9fb26ff131f36, type: 3}
   m_Name: Testing Projectile Frame
   m_EditorClassIdentifier: 
-  autoUse: 0
-  useTime: 0.1
-  ready: 0
-  damage: 0
-  range: 0
-  recoil: 0
-  fireRate: 0
-  adsTime: 0
-  hipFire: 0
-  usePrimaryAmmo: 0
-  readyAmmo: 10
-  reserveAmmo: 0
-  currentAmmo: 0
-  ammoPerShot: 0
-  burstLength: 0
-  burstSpeed: 0
-  doAreaDamage: 0
-  areaDamageSize: 0
+  baseStats:
+    autoUse: 1
+    useTime: 1
+    damage: 115
+    range: 0
+    recoil: 0
+    adsTime: 0
+    hipFire: 0
+    usePrimaryAmmo: 0
+    readyAmmo: 10
+    reserveAmmo: 0
+    ammoPerShot: 0
+    burstLength: 0
+    burstSpeed: 0
+    doAreaDamage: 0
+    areaDamageSize: 0
   interactionLayers:
     serializedVersion: 2
     m_Bits: 1
-  spawnedProjectile: {fileID: 3056892880183917614, guid: a6647a167c3be3545bfca6f9f2e0501a, type: 3}
-  projectileSpeed: 50
-  projectileMass: 0
+  projectileBaseStats:
+    spawnedProjectile: {fileID: 3056892880183917614, guid: a6647a167c3be3545bfca6f9f2e0501a, type: 3}
+    projectileSpeed: 50
+    projectileMass: 1

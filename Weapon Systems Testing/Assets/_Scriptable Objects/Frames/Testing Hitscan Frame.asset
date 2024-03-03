@@ -12,24 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68c0af78dbeb10642b3e058e2950cecc, type: 3}
   m_Name: Testing Hitscan Frame
   m_EditorClassIdentifier: 
-  autoUse: 1
-  useTime: 0.5
-  ready: 0
-  damage: 115
-  range: 1000
-  recoil: 0
-  fireRate: 0
-  adsTime: 0
-  hipFire: 0
-  usePrimaryAmmo: 0
-  readyAmmo: 10
-  reserveAmmo: 0
-  currentAmmo: 10
-  ammoPerShot: 0
-  burstLength: 0
-  burstSpeed: 0
-  doAreaDamage: 0
-  areaDamageSize: 0
+  baseStats:
+    autoUse: 1
+    useTime: 1
+    damage: 11
+    range: 1000
+    recoil: 0
+    adsTime: 0
+    hipFire: 0
+    usePrimaryAmmo: 0
+    readyAmmo: 10
+    reserveAmmo: 0
+    ammoPerShot: 0
+    burstLength: 0
+    burstSpeed: 0
+    doAreaDamage: 0
+    areaDamageSize: 0
   interactionLayers:
     serializedVersion: 2
     m_Bits: 1

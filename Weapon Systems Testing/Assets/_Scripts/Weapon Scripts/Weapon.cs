@@ -23,7 +23,6 @@ public class Weapon : ScriptableObject
     public virtual void Intialize(WeaponController weapon) 
     {
         frameCoolDownKeys = new List<string>();
-        Debug.Log(frameCoolDownKeys.Count);
         controller = weapon;
 
         // Runs through every frame in the frames array
@@ -31,16 +30,15 @@ public class Weapon : ScriptableObject
         {
             frameCoolDownKeys.Add("Frame" + i.ToString());
             
-            timerManager.Add(frameCoolDownKeys[i], new Timer(frames[i].useTime, TimerEnd));
-
-            frames[i].ready = true;
+            timerManager.Add(frameCoolDownKeys[i], new Timer(frames[i].currentStats.useTime, TimerEnd));
 
             frames[i].Initialize(this);
+            frames[i].currentStats.ready = true;
 
-            if (frames[i].usePrimaryAmmo)
-                frames[i].readyAmmo = frames[0].readyAmmo;
+            if (frames[i].currentStats.usePrimaryAmmo)
+                frames[i].currentStats.readyAmmo = frames[0].currentStats.readyAmmo;
 
-            frames[i].currentAmmo = frames[i].readyAmmo;
+            frames[i].currentStats.currentAmmo = frames[i].currentStats.readyAmmo;
         }
     }
     public virtual void UpdateWeapon(float dt) 
@@ -58,16 +56,12 @@ public class Weapon : ScriptableObject
         {
             timerManager.timers[frameCoolDownKeys[frameIndex]].Start();
         }
-        else
-        {
-            Debug.Log("Use Failed");
-        }
     }
     public void TimerEnd(string timer)
     {
         // Handles a use cooldown timer expiring
         if (frameCoolDownKeys.Contains(timer))
-            frames[frameCoolDownKeys.IndexOf(timer)].ready = true;
+            frames[frameCoolDownKeys.IndexOf(timer)].currentStats.ready = true;
     }
 
     public virtual void CalculateStats() { }

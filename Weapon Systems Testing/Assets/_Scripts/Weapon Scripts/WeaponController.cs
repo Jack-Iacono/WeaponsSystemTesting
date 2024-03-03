@@ -23,8 +23,8 @@ public class WeaponController : MonoBehaviour
         for(int i = 0; i < frameKeys.Count; i++)
         {
             if(
-                (currentWeapon.frames[i].autoUse && Input.GetKey(frameKeys[i])) || 
-                (!currentWeapon.frames[i].autoUse && Input.GetKeyDown(frameKeys[i]))
+                (currentWeapon.frames[i].currentStats.autoUse && Input.GetKey(frameKeys[i])) || 
+                (!currentWeapon.frames[i].currentStats.autoUse && Input.GetKeyDown(frameKeys[i]))
               )
             {
                 currentWeapon.UseFrame(i);
