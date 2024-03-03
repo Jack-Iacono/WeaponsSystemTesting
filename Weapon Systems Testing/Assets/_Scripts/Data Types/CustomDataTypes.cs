@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class Timer
 {
-    public delegate void TimerEnd();
+    public delegate void TimerEnd(string key);
     TimerEnd endCallback;
+
+    public string name;
 
     private float current;
     private float max;
@@ -37,7 +39,7 @@ public class Timer
                 Stop();
 
                 // Calls the registered callback function
-                endCallback();
+                endCallback(name);
             }
         }
     }
@@ -114,6 +116,7 @@ public class TimerManager
     public void Add(string name, Timer timer)
     {
         timers.Add(name, timer);
+        timers[name].name = name;
     }
     public void Remove(string name)
     {

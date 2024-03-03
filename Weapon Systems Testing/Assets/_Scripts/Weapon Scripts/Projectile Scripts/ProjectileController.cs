@@ -8,7 +8,7 @@ public class ProjectileController : MonoBehaviour, Interactable
     public Projectile projectile;
     public Rigidbody rb;
 
-    public Weapon parentWeapon { get; private set; }
+    public Frame parentFrame { get; private set; }
 
     private Vector3 velocityStore = Vector3.zero;
     public void Initialize()
@@ -49,11 +49,11 @@ public class ProjectileController : MonoBehaviour, Interactable
         }
     }
 
-    public void StartProjectile(Weapon parentWeapon, Transform spawnPoint, Vector3 velocity, float mass = 1)
+    public void StartProjectile(Frame parentFrame, Transform spawnPoint, Vector3 velocity, float mass = 1)
     {
         gameObject.SetActive(true);
 
-        this.parentWeapon = parentWeapon;
+        this.parentFrame = parentFrame;
 
         rb.mass = mass;
         rb.velocity = Vector3.zero;

@@ -1,25 +1,12 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour, Interactable
+public abstract class Enemy : MonoBehaviour, Interactable
 {
-
-
-    // Start is called before the first frame update
-    void Start()
+    public virtual void ProjectileHit(ProjectileController projectile)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-    public void ProjectileHit(ProjectileController projectile)
-    {
-        Debug.Log(projectile.parentWeapon.name);
+        Debug.Log($"Hit by {projectile.parentFrame.name} for {projectile.parentFrame.damage} damage");
     }
 }

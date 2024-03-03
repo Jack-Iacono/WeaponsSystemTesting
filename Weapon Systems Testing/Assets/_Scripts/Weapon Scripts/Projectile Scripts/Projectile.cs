@@ -36,7 +36,7 @@ public class Projectile : ScriptableObject
     {
         timerManager.timers[lifetimeKey].Stop();
     }
-    public void ProjectileLifetimeEnd()
+    public void ProjectileLifetimeEnd(string timer)
     {
         controller.ProjectileLifetimeEnd();
     }
