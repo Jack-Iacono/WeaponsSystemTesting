@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5db3968599789f2418d9fb26ff131f36, type: 3}
-  m_Name: Testing Projectile Frame
+  m_Name: Testing Projectile Frame 2
   m_EditorClassIdentifier: 
   baseStats:
     autoUse: 1
-    useTime: 0.1
+    useTime: 0.3
     damage: 115
     range: 0
     recoil: 0
@@ -28,10 +28,12 @@ MonoBehaviour:
     burstSpeed: 0
     doAreaDamage: 0
     areaDamageSize: 0
+    shotsInSpread: 0
+    spreadGrouping: 0
   interactionLayers:
     serializedVersion: 2
     m_Bits: 1
   projectileBaseStats:
-    spawnedProjectile: {fileID: 3056892880183917614, guid: a6647a167c3be3545bfca6f9f2e0501a, type: 3}
-    projectileSpeed: 50
-    projectileMass: 1
+    spawnedProjectile: {fileID: 3056892880183917614, guid: 664dc68300f056c4eaf142bf4ace09b0, type: 3}
+    projectileSpeed: 30
+    projectileMass: 2

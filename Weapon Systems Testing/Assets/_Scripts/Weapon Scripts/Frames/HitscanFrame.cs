@@ -11,7 +11,10 @@ public class HitscanFrame : RangedFrame
 
         if (Physics.Raycast(connectedWeapon.controller.cameraController.GetSightRay(), out hit, currentStats.range, interactionLayers))
         {
-            Debug.Log(hit.collider.name);
+            var particle = ObjectPool.instance.GetPooledObject("HitParticle");
+            particle.transform.position = hit.point;
+            particle.SetActive(true);
+            particle.SendMessage("StartParticle");
         }
     }
 }

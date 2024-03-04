@@ -9,7 +9,6 @@ public class Projectile : ScriptableObject
 
     public enum CollisionAction { DESTROY, BOUNCE };
     public CollisionAction collisionAction;
-    public float bounceAmp;
 
     public LayerMask interactLayers;
 

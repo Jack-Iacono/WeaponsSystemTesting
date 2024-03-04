@@ -33,7 +33,6 @@ public class Weapon : ScriptableObject
             timerManager.Add(frameCoolDownKeys[i], new Timer(frames[i].currentStats.useTime, TimerEnd));
 
             frames[i].Initialize(this);
-            frames[i].currentStats.ready = true;
 
             if (frames[i].currentStats.usePrimaryAmmo)
                 frames[i].currentStats.readyAmmo = frames[0].currentStats.readyAmmo;

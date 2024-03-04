@@ -28,7 +28,6 @@ public class WeaponController : MonoBehaviour
               )
             {
                 currentWeapon.UseFrame(i);
-                break;
             }
         }
 

@@ -245,6 +245,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _objectsToPool:
   - {fileID: 11400000, guid: f652e77947ff3fa4b8d04b8df98106ce, type: 2}
+  - {fileID: 11400000, guid: 4d406323e7e12e040852f6736a6575a4, type: 2}
+  - {fileID: 11400000, guid: dc26c582b090e5842a1781c7812f70f9, type: 2}
 --- !u!1 &60458986
 GameObject:
   m_ObjectHideFlags: 0
@@ -275,7 +277,7 @@ Transform:
   m_Children:
   - {fileID: 1936016924}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &349455029
 GameObject:
@@ -343,7 +345,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &549418279
 GameObject:

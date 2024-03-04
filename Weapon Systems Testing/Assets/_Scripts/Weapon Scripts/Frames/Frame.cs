@@ -38,6 +38,7 @@ public abstract class RangedFrame : Frame
 
         return false;
     }
+
     protected abstract void Fire();
 }
 
@@ -48,7 +49,7 @@ public class FrameStats
     public bool autoUse;
     public float useTime;
     [NonSerialized]
-    public bool ready;
+    public bool ready = true;
 
     [Header("General Stats")]
     public float damage;
@@ -67,10 +68,16 @@ public class FrameStats
     public int ammoPerShot;
 
     [Header("Fire Style Stats")]
-    public float burstLength;
+    public int burstLength;
     public float burstSpeed;
+    private int currentBurst = -1;
+    private bool burstFiring = false;
 
     [Header("Area Damage Stats Stats")]
     public bool doAreaDamage;
     public float areaDamageSize;
+
+    [Header("Spread Shot Stats")]
+    public int shotsInSpread;
+    public float spreadGrouping;
 }
