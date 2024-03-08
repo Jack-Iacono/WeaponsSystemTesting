@@ -8,7 +8,7 @@ public class Weapon : ScriptableObject
 {
     public WeaponController controller { get; private set; }
 
-    protected TimerManager timerManager = new TimerManager();
+    protected TimerManager timerManager;
     private List<string> frameCoolDownKeys;
 
     public new string name;
@@ -25,14 +25,16 @@ public class Weapon : ScriptableObject
         frameCoolDownKeys = new List<string>();
         controller = weapon;
 
+        timerManager = new TimerManager();
+
         // Runs through every frame in the frames array
         for(int i = 0; i < frames.Count; i++)
         {
             frameCoolDownKeys.Add("Frame" + i.ToString());
-            
-            timerManager.Add(frameCoolDownKeys[i], new Timer(frames[i].currentStats.useTime, TimerEnd));
 
             frames[i].Initialize(this);
+
+            timerManager.Add(frameCoolDownKeys[i], new Timer(frames[i].currentStats.useTime, TimerEnd));
 
             if (frames[i].currentStats.usePrimaryAmmo)
                 frames[i].currentStats.readyAmmo = frames[0].currentStats.readyAmmo;

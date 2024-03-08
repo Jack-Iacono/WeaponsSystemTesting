@@ -18,6 +18,10 @@ public abstract class Frame : ScriptableObject
         // TEMPORARY: Change later for weapon crafting
         currentStats = baseStats;
     }
+    public virtual void UpdateFrame()
+    {
+
+    }
 }
 public abstract class RangedFrame : Frame
 {
@@ -25,6 +29,8 @@ public abstract class RangedFrame : Frame
 
     public override bool Activate()
     {
+        Debug.Log(currentStats.useTime);
+
         // this functionality stays here in case of usePrimaryAmmo
         if (currentStats.ready && currentStats.currentAmmo >= currentStats.ammoPerShot)
         {
