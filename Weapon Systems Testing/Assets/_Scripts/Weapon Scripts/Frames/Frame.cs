@@ -9,8 +9,21 @@ public abstract class Frame : ScriptableObject
     public FrameStats currentStats { get; private set; }
 
     protected TimerManager timerManager = new TimerManager();
-
     public Weapon connectedWeapon { get; private set; }
+
+    #region Functionality Variables
+
+    [NonSerialized]
+    public int currentAmmo = 0;
+
+    protected bool activationBusy = false;
+    protected bool burstActivationBusy = false;
+
+    protected const string BurstTimerKey = "BurstTimer";
+
+    protected int burstRemaining = 0;
+
+    #endregion
 
     #region Behavior Tree
 
@@ -22,13 +35,14 @@ public abstract class Frame : ScriptableObject
     protected Sequence refillActions;
     protected Sequence readyActions;
 
-    protected const string activateSequenceKey = "Activate";
-    protected const string refillSequenceKey = "Refill";
-    protected const string readySequenceKey = "Ready";
+    protected const string ActivateSequenceKey = "Activate";
+    protected const string RefillSequenceKey = "Refill";
+    protected const string ReadySequenceKey = "Ready";
 
     #endregion
 
-    public abstract bool Activate();
+    public abstract void Activate();
+
     public virtual void Initialize(Weapon connectedWeapon)
     {
         this.connectedWeapon = connectedWeapon;
@@ -36,9 +50,34 @@ public abstract class Frame : ScriptableObject
         // TEMPORARY: Change later for weapon crafting
         currentStats = baseStats;
 
-        timerManager.Add(activateSequenceKey, new Timer(currentStats.useTime, ActivateTimerCallback));
-    }
-    public virtual void UpdateFrame()
+        timerManager.Add(ActivateSequenceKey, new Timer(currentStats.useTime, ActivateTimerCallback));
+        timerManager.Add(BurstTimerKey, new Timer(currentStats.burstSpeed, BurstTimerCallback));
+
+        activateActions = new Sequence(ActivateSequenceKey);
+        activateActions.AddChild(new Action("BeginActivate", BeginActivate));
+        activateActions.AddChild(new Action("UpdateActivate", UpdateActivate));
+        activateActions.AddChild(new Action("EndActivate", EndActivate));
+
+        refillActions = new Sequence(RefillSequenceKey);
+        refillActions.AddChild(new Action("BeginRefill", BeginRefill));
+        refillActions.AddChild(new Action("UpdateRefill", UpdateRefill));
+        refillActions.AddChild(new Action("EndRefill", EndRefill));
+
+        readyActions = new Sequence(ReadySequenceKey);
+        readyActions.AddChild(new Action("BeginReady", BeginReady));
+        readyActions.AddChild(new Action("UpdateReady", UpdateReady));
+        readyActions.AddChild(new Action("EndReady", EndReady));
+
+        frameBehavior.AddChild(readyActions);
+        frameBehavior.AddChild(activateActions);
+        frameBehavior.AddChild(refillActions);
+
+        frameBehavior.StartSequence(ReadySequenceKey);
+
+        activationBusy = false;
+        burstActivationBusy = false;
+}
+    public virtual void UpdateFrame(float dt)
     {
         //controls the behavior of the method
         if (status == Node.Status.RUNNING)
@@ -50,15 +89,17 @@ public abstract class Frame : ScriptableObject
             switch (frameBehavior.GetCurrentSequenceName())
             {
                 default:
-                    frameBehavior.StartSequence(readySequenceKey);
+                    frameBehavior.StartSequence(ReadySequenceKey);
                     break;
             }
 
             status = frameBehavior.Check();
         }
+
+        timerManager.IncrementTimers(dt);
     }
 
-    #region Firing Behaviors
+    #region Frame Behaviors
 
     protected virtual Node.Status BeginActivate() { return Node.Status.SUCCESS; }
     protected virtual Node.Status UpdateActivate() { return Node.Status.SUCCESS; }
@@ -69,7 +110,7 @@ public abstract class Frame : ScriptableObject
     protected virtual Node.Status EndRefill() { return Node.Status.SUCCESS; }
 
     protected virtual Node.Status BeginReady() { return Node.Status.SUCCESS; }
-    protected virtual Node.Status UpdateReady() { return Node.Status.SUCCESS; }
+    protected virtual Node.Status UpdateReady() { return Node.Status.RUNNING; }
     protected virtual Node.Status EndReady() { return Node.Status.SUCCESS; }
 
     #endregion
@@ -77,6 +118,16 @@ public abstract class Frame : ScriptableObject
     #region Timer Callbacks
 
     protected virtual void ActivateTimerCallback(string key) { }
+    protected virtual void BurstTimerCallback(string key) { }
+
+    #endregion
+
+    #region Helper Scripts
+
+    public virtual bool IsFrameActivated()
+    {
+        return frameBehavior.GetCurrentSequenceName() != ReadySequenceKey;
+    }
 
     #endregion
 }
@@ -84,23 +135,72 @@ public abstract class RangedFrame : Frame
 {
     public LayerMask interactionLayers;
 
-    public override bool Activate()
+    public override void Activate()
     {
-        // this functionality stays here in case of usePrimaryAmmo
-        if (currentStats.ready && currentStats.currentAmmo >= currentStats.ammoPerShot)
+        if(frameBehavior.GetCurrentSequenceName() != ActivateSequenceKey)
         {
-            Fire();
+            frameBehavior.StartSequence(ActivateSequenceKey);
+        }
+    }
+    protected abstract void Fire(Transform origin);
 
-            currentStats.ready = false;
-            currentStats.currentAmmo -= currentStats.ammoPerShot;
+    protected override Node.Status BeginActivate()
+    {
+        burstRemaining = currentStats.burstLength;
 
-            return true;
+        return Node.Status.SUCCESS;
+    }
+    protected override Node.Status UpdateActivate() 
+    {
+        if (burstRemaining > 0)
+        {
+            if(currentAmmo >= currentStats.ammoPerShot)
+            {
+                if (!burstActivationBusy)
+                {
+                    for(int i = 0; i < currentStats.shotsInSpread; i++)
+                    {
+                        Fire(connectedWeapon.controller.projectileSpawnPoint);
+                    }
+
+                    burstRemaining--;
+                    currentAmmo -= currentStats.ammoPerShot;
+
+                    burstActivationBusy = true;
+                    timerManager.timers[BurstTimerKey].Start();
+                }
+            }
+            else
+            {
+                activationBusy = true;
+                timerManager.timers[ActivateSequenceKey].Start();
+                return Node.Status.SUCCESS;
+            }
+        }
+        else if (!burstActivationBusy)
+        {
+            activationBusy = true;
+            timerManager.timers[ActivateSequenceKey].Start();
+            return Node.Status.SUCCESS;
         }
 
-        return false;
+        return Node.Status.RUNNING;
+    }
+    protected override Node.Status EndActivate()
+    {
+        if (!activationBusy)
+            return Node.Status.SUCCESS;
+        return Node.Status.RUNNING;
     }
 
-    protected abstract void Fire();
+    protected override void ActivateTimerCallback(string key) 
+    {
+        activationBusy = false;
+    }
+    protected override void BurstTimerCallback(string key) 
+    {
+        burstActivationBusy = false;
+    }
 }
 
 [Serializable]
@@ -109,8 +209,6 @@ public class FrameStats
     [Header("Use Stats")]
     public bool autoUse;
     public float useTime;
-    [NonSerialized]
-    public bool ready = true;
 
     [Header("General Stats")]
     public float damage;
@@ -124,21 +222,23 @@ public class FrameStats
     public bool usePrimaryAmmo;
     public int readyAmmo;
     public int reserveAmmo;
-    [NonSerialized]
-    public int currentAmmo;
     public int ammoPerShot;
 
     [Header("Fire Style Stats")]
-    public int burstLength;
+    [Range(1f,100f)]
+    public int burstLength = 1;
+    [Range(0,5)]
     public float burstSpeed;
-    private int currentBurst = -1;
-    private bool burstFiring = false;
 
     [Header("Area Damage Stats Stats")]
-    public bool doAreaDamage;
+    public bool doAreaDamage = false;
     public float areaDamageSize;
 
     [Header("Spread Shot Stats")]
-    public int shotsInSpread;
+    [Range(1,100)]
+    public int shotsInSpread = 1;
+    [Range(0,1)]
     public float spreadGrouping;
+    [Range(0,1)]
+    public float spreadAngle;
 }

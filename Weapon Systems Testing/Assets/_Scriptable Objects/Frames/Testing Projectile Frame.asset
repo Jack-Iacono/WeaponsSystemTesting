@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   baseStats:
     autoUse: 1
-    useTime: 0.1
+    useTime: 1
     damage: 115
     range: 0
     recoil: 0
@@ -24,10 +24,12 @@ MonoBehaviour:
     readyAmmo: 10
     reserveAmmo: 0
     ammoPerShot: 0
-    burstLength: 0
-    burstSpeed: 0
+    burstLength: 5
+    burstSpeed: 0.05
     doAreaDamage: 0
     areaDamageSize: 0
+    shotsInSpread: 1
+    spreadGrouping: 0
   interactionLayers:
     serializedVersion: 2
     m_Bits: 1

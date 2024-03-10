@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Data", menuName = "Frame/Hitscan Frame", order = 1)]
 public class HitscanFrame : RangedFrame
 {
-    protected override void Fire()
+    protected override void Fire(Transform origin)
     {
         RaycastHit hit;
 

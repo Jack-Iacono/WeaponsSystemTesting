@@ -24,12 +24,13 @@ MonoBehaviour:
     readyAmmo: 10
     reserveAmmo: 0
     ammoPerShot: 0
-    burstLength: 0
-    burstSpeed: 0
+    burstLength: 10
+    burstSpeed: 0.01
     doAreaDamage: 0
     areaDamageSize: 0
-    shotsInSpread: 0
+    shotsInSpread: 100
     spreadGrouping: 0
+    spreadAngle: 0
   interactionLayers:
     serializedVersion: 2
     m_Bits: 1

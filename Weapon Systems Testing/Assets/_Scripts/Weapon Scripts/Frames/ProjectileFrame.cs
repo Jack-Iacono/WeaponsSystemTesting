@@ -16,10 +16,10 @@ public class ProjectileFrame : RangedFrame
         // TEMPORARY: Change later for weapon crafting
         projectileCurrentStats = projectileBaseStats;
     }
-    protected override void Fire()
+    protected override void Fire(Transform origin)
     {
         GameObject projectile = ObjectPool.instance.GetPooledObject(projectileCurrentStats.spawnedProjectile.name);
-        projectile.GetComponent<ProjectileController>().StartProjectile(this, connectedWeapon.controller.projectileSpawnPoint, connectedWeapon.controller.cameraController.transform.forward * projectileCurrentStats.projectileSpeed, projectileCurrentStats.projectileMass);
+        projectile.GetComponent<ProjectileController>().StartProjectile(this, origin, origin.transform.forward * projectileCurrentStats.projectileSpeed, projectileCurrentStats.projectileMass);
     }
 }
 

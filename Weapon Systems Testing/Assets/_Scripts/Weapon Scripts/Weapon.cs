@@ -8,9 +8,6 @@ public class Weapon : ScriptableObject
 {
     public WeaponController controller { get; private set; }
 
-    protected TimerManager timerManager;
-    private List<string> frameCoolDownKeys;
-
     public new string name;
     public string tooltip;
 
@@ -22,29 +19,27 @@ public class Weapon : ScriptableObject
 
     public virtual void Intialize(WeaponController weapon) 
     {
-        frameCoolDownKeys = new List<string>();
         controller = weapon;
-
-        timerManager = new TimerManager();
 
         // Runs through every frame in the frames array
         for(int i = 0; i < frames.Count; i++)
         {
-            frameCoolDownKeys.Add("Frame" + i.ToString());
-
             frames[i].Initialize(this);
 
-            timerManager.Add(frameCoolDownKeys[i], new Timer(frames[i].currentStats.useTime, TimerEnd));
-
+            // Overrides the weapon's normal ammo stuff
             if (frames[i].currentStats.usePrimaryAmmo)
+            {
                 frames[i].currentStats.readyAmmo = frames[0].currentStats.readyAmmo;
-
-            frames[i].currentStats.currentAmmo = frames[i].currentStats.readyAmmo;
+                frames[i].currentAmmo = frames[i].currentStats.readyAmmo;
+            }
         }
     }
     public virtual void UpdateWeapon(float dt) 
     {
-        timerManager.IncrementTimers(dt); 
+        foreach(Frame f in frames)
+        {
+            f.UpdateFrame(dt);
+        }
     }
 
     /// <summary>
@@ -53,16 +48,14 @@ public class Weapon : ScriptableObject
     /// <param name="frameIndex">The index of the frame that is being used</param>
     public void UseFrame(int frameIndex)
     {
-        if (frames[frameIndex].Activate())
+        if (CheckActiveFrames(frameIndex))
         {
-            timerManager.timers[frameCoolDownKeys[frameIndex]].Start();
+            frames[frameIndex].Activate();
         }
     }
-    public void TimerEnd(string timer)
+    private bool CheckActiveFrames(int queryFrame)
     {
-        // Handles a use cooldown timer expiring
-        if (frameCoolDownKeys.Contains(timer))
-            frames[frameCoolDownKeys.IndexOf(timer)].currentStats.ready = true;
+        foreach (Frame f in frames) { if (f.IsFrameActivated() && f != frames[queryFrame]) return false; } return true;
     }
 
     public virtual void CalculateStats() { }
