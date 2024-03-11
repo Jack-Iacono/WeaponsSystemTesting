@@ -142,7 +142,7 @@ public abstract class RangedFrame : Frame
             frameBehavior.StartSequence(ActivateSequenceKey);
         }
     }
-    protected abstract void Fire(Transform origin);
+    protected abstract void Fire(Transform origin, Vector3 angleOffset);
 
     protected override Node.Status BeginActivate()
     {
@@ -160,7 +160,10 @@ public abstract class RangedFrame : Frame
                 {
                     for(int i = 0; i < currentStats.shotsInSpread; i++)
                     {
-                        Fire(connectedWeapon.controller.projectileSpawnPoint);
+                        if(i == 0)
+                            Fire(connectedWeapon.controller.projectileSpawnPoint, Vector3.zero);
+                        else
+                            Fire(connectedWeapon.controller.projectileSpawnPoint, new Vector3(UnityEngine.Random.Range(-currentStats.spreadAngle, currentStats.spreadAngle), UnityEngine.Random.Range(-currentStats.spreadAngle, currentStats.spreadAngle), 0));
                     }
 
                     burstRemaining--;
@@ -206,6 +209,10 @@ public abstract class RangedFrame : Frame
 [Serializable]
 public class FrameStats
 {
+    public string name;
+    [TextArea]
+    public string tooltip;
+
     [Header("Use Stats")]
     public bool autoUse;
     public float useTime;
@@ -237,8 +244,7 @@ public class FrameStats
     [Header("Spread Shot Stats")]
     [Range(1,100)]
     public int shotsInSpread = 1;
-    [Range(0,1)]
-    public float spreadGrouping;
-    [Range(0,1)]
+    [Range(0,20)]
+    [Tooltip("This number is representative of HALF of the spread angle, not the full cone")]
     public float spreadAngle;
 }
