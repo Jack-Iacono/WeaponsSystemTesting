@@ -9,11 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 887cca2dce1948149a271f76546cc79b, type: 3}
-  m_Name: Basic Projectile
+  m_Script: {fileID: 11500000, guid: 18d0541cc2a54724682de25702c33655, type: 3}
+  m_Name: Test Projectile 2
   m_EditorClassIdentifier: 
-  projectileLifetime: 2
-  collisionAction: 1
-  interactLayers:
-    serializedVersion: 2
-    m_Bits: 1
+  obj: {fileID: 3056892880183917614, guid: 664dc68300f056c4eaf142bf4ace09b0, type: 3}
+  poolCount: 10

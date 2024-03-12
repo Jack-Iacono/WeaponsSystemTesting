@@ -71,7 +71,7 @@ public class ObjectPool : MonoBehaviour
             }
         }
 
-        Debug.Log("Object not found, check name");
+        Debug.Log("Object " + name + " not found, check name");
         return null;
     }
 

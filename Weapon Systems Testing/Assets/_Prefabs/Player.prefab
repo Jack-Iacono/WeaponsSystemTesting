@@ -232,9 +232,9 @@ MonoBehaviour:
   currentWeapon: {fileID: 11400000, guid: 8463864d251c4cc46b522c4ccb837b99, type: 2}
   cameraController: {fileID: 3774186691638534710}
   projectileSpawnPoint: {fileID: 1835656663377136975}
-  hitLayers:
-    serializedVersion: 2
-    m_Bits: 1
+  framePrimaryKey: 323
+  frameSecondaryKey: 324
+  frameSwapKey: 113
 --- !u!1 &6649520145650409059
 GameObject:
   m_ObjectHideFlags: 0
@@ -356,7 +356,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8838691143295984934}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.18140465, y: 1.4547008, z: 1.0329725}
+  m_LocalPosition: {x: 0, y: 0, z: 2}
   m_LocalScale: {x: 10, y: 10, z: 3.333333}
   m_ConstrainProportionsScale: 0
   m_Children: []

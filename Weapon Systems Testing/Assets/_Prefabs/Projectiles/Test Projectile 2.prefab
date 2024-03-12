@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 1924254872403408600}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
+  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 3056892880183917586}
@@ -61,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 2b01ca0ec9df72e449212b8064167f47, type: 2}
+  - {fileID: 2100000, guid: f35a65f8fbae9b244a640ea772a11991, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 1448306770879470685}
   - component: {fileID: 1165045932502647035}
   m_Layer: 7
-  m_Name: Test Projectile
+  m_Name: Test Projectile 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -130,7 +130,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71f788355e763a94ba52d64a668f1cd6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectile: {fileID: 11400000, guid: d01344938581435438af7faa6f9da3da, type: 2}
+  projectile: {fileID: 11400000, guid: 938196aa060b2fc44a86595fbaf9c073, type: 2}
   rb: {fileID: 1165045932502647035}
 --- !u!135 &1448306770879470685
 SphereCollider:
@@ -143,7 +143,7 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.025
+  m_Radius: 0.05
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &1165045932502647035
 Rigidbody:
@@ -160,4 +160,4 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 3
+  m_CollisionDetection: 2

@@ -9,7 +9,6 @@ public class Projectile : ScriptableObject
 
     public enum CollisionAction { DESTROY, BOUNCE };
     public CollisionAction collisionAction;
-    public float bounceAmp;
 
     public LayerMask interactLayers;
 
@@ -36,7 +35,7 @@ public class Projectile : ScriptableObject
     {
         timerManager.timers[lifetimeKey].Stop();
     }
-    public void ProjectileLifetimeEnd()
+    public void ProjectileLifetimeEnd(string timer)
     {
         controller.ProjectileLifetimeEnd();
     }
