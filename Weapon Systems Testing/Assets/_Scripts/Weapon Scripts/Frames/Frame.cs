@@ -18,6 +18,7 @@ public abstract class Frame : ScriptableObject
 
     protected bool activationBusy = false;
     protected bool burstActivationBusy = false;
+    protected bool refillBusy = false;
 
     protected const string BurstTimerKey = "BurstTimer";
 
@@ -41,7 +42,8 @@ public abstract class Frame : ScriptableObject
 
     #endregion
 
-    public abstract void Activate();
+    public abstract void ActivatePrimary();
+    public abstract void ActivateSecondary();
 
     public virtual void Initialize(Weapon connectedWeapon)
     {
@@ -50,8 +52,11 @@ public abstract class Frame : ScriptableObject
         // TEMPORARY: Change later for weapon crafting
         currentStats = baseStats;
 
+        currentAmmo = currentStats.readyAmmo;
+
         timerManager.Add(ActivateSequenceKey, new Timer(currentStats.useTime, ActivateTimerCallback));
         timerManager.Add(BurstTimerKey, new Timer(currentStats.burstSpeed, BurstTimerCallback));
+        timerManager.Add(RefillSequenceKey, new Timer(currentStats.refillSpeed, RefillTimerCallback));
 
         activateActions = new Sequence(ActivateSequenceKey);
         activateActions.AddChild(new Action("BeginActivate", BeginActivate));
@@ -119,6 +124,7 @@ public abstract class Frame : ScriptableObject
 
     protected virtual void ActivateTimerCallback(string key) { }
     protected virtual void BurstTimerCallback(string key) { }
+    protected virtual void RefillTimerCallback(string key) { }
 
     #endregion
 
@@ -130,16 +136,26 @@ public abstract class Frame : ScriptableObject
     }
 
     #endregion
+
 }
+
 public abstract class RangedFrame : Frame
 {
     public LayerMask interactionLayers;
 
-    public override void Activate()
+    public override void ActivatePrimary()
     {
         if(frameBehavior.GetCurrentSequenceName() != ActivateSequenceKey)
         {
             frameBehavior.StartSequence(ActivateSequenceKey);
+        }
+    }
+    public override void ActivateSecondary()
+    {
+        if (frameBehavior.GetCurrentSequenceName() == ReadySequenceKey)
+        {
+            Debug.Log("Start Refill");
+            frameBehavior.StartSequence(RefillSequenceKey);
         }
     }
     protected abstract void Fire(Transform origin, Vector3 angleOffset);
@@ -191,9 +207,46 @@ public abstract class RangedFrame : Frame
     }
     protected override Node.Status EndActivate()
     {
-        if (!activationBusy)
+        if (!activationBusy || currentAmmo == 0)
+        {
+            activationBusy = false;
             return Node.Status.SUCCESS;
+        }
+
         return Node.Status.RUNNING;
+    }
+
+    protected override Node.Status BeginRefill()
+    {
+        refillBusy = true;
+        timerManager.timers[RefillSequenceKey].Start();
+        return Node.Status.SUCCESS;
+    }
+    protected override Node.Status UpdateRefill()
+    {
+        if(currentAmmo < currentStats.readyAmmo && !refillBusy)
+        {
+            if(currentStats.refillAmount == 0)
+            {
+                currentAmmo = currentStats.readyAmmo;
+                return Node.Status.SUCCESS;
+            }
+            else
+            {
+                currentAmmo = Mathf.Clamp(currentAmmo + currentStats.refillAmount, 0, currentStats.readyAmmo);
+                Debug.Log("Current Ammo: " + currentAmmo);
+            }
+        }
+
+        if (currentAmmo == currentStats.readyAmmo)
+            return Node.Status.SUCCESS;
+
+        return Node.Status.RUNNING;
+    }
+    protected override Node.Status EndRefill()
+    {
+        refillBusy = false;
+        return Node.Status.SUCCESS;
     }
 
     protected override void ActivateTimerCallback(string key) 
@@ -203,6 +256,10 @@ public abstract class RangedFrame : Frame
     protected override void BurstTimerCallback(string key) 
     {
         burstActivationBusy = false;
+    }
+    protected override void RefillTimerCallback(string key)
+    {
+        refillBusy = false;
     }
 }
 
@@ -228,8 +285,13 @@ public class FrameStats
     [Tooltip("This bool dictates if this frame should pull ammo from the primary pool instead of its own")]
     public bool usePrimaryAmmo;
     public int readyAmmo;
-    public int reserveAmmo;
+    public int maxReserveAmmo;
     public int ammoPerShot;
+
+    [Header("Refill Stats")]
+    public float refillSpeed;
+    [Tooltip("How much should be refilled per tick, 0 = all at once")]
+    public int refillAmount;
 
     [Header("Fire Style Stats")]
     [Range(1f,100f)]

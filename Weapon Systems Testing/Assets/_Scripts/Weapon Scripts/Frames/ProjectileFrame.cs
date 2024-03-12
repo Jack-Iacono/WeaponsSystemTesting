@@ -29,12 +29,10 @@ public class ProjectileFrame : RangedFrame
 
         if (Physics.Raycast(ray, out hit, currentStats.range, interactionLayers))
         {
-            Debug.Log("Hit");
             velocity = (hit.point - origin.position).normalized * projectileCurrentStats.projectileSpeed;
         }
         else
         {
-            Debug.Log("Default");
             velocity = (ray.GetPoint(10) - origin.position).normalized * projectileCurrentStats.projectileSpeed;
         }
 

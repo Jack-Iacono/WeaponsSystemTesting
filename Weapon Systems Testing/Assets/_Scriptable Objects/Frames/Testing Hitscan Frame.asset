@@ -16,7 +16,7 @@ MonoBehaviour:
     name: 
     tooltip: 
     autoUse: 1
-    useTime: 1
+    useTime: 0.1
     damage: 11
     range: 50
     recoil: 0
@@ -24,8 +24,10 @@ MonoBehaviour:
     hipFire: 0
     usePrimaryAmmo: 0
     readyAmmo: 10
-    reserveAmmo: 0
-    ammoPerShot: 0
+    maxReserveAmmo: 100
+    ammoPerShot: 1
+    refillSpeed: 0.01
+    refillAmount: 1
     burstLength: 1
     burstSpeed: 0
     doAreaDamage: 0

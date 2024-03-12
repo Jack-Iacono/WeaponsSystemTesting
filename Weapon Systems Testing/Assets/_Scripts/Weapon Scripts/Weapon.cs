@@ -14,6 +14,7 @@ public class Weapon : ScriptableObject
     // This exists purely to allow me to add more frames easily later
     private const int maxFrames = 2;
     public List<Frame> frames = new List<Frame>();
+    public int activeFrame = 0;
 
     public int modBudget;
 
@@ -36,27 +37,30 @@ public class Weapon : ScriptableObject
     }
     public virtual void UpdateWeapon(float dt) 
     {
-        foreach(Frame f in frames)
-        {
-            f.UpdateFrame(dt);
-        }
+        frames[activeFrame].UpdateFrame(dt);
     }
 
     /// <summary>
     /// This will use the frame that is denoted by the frame index variable i.e. 1 = Primary Frame, 2 = Secondary Frame, etc...
     /// </summary>
     /// <param name="frameIndex">The index of the frame that is being used</param>
-    public void UseFrame(int frameIndex)
+    public void UseFramePrimary()
     {
-        if (CheckActiveFrames(frameIndex))
-        {
-            frames[frameIndex].Activate();
-        }
+        frames[activeFrame].ActivatePrimary();
     }
-    private bool CheckActiveFrames(int queryFrame)
+    public void UseFrameSecondary()
     {
-        foreach (Frame f in frames) { if (f.IsFrameActivated() && f != frames[queryFrame]) return false; } return true;
+        frames[activeFrame].ActivateSecondary();
     }
 
     public virtual void CalculateStats() { }
+    public virtual void ChangeFrame()
+    {
+        if (activeFrame < maxFrames - 1)
+            activeFrame++;
+        else
+            activeFrame = 0;
+
+        Debug.Log("Active Frame: " + activeFrame);
+    }
 }

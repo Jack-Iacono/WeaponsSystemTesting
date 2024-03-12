@@ -31,7 +31,7 @@ MonoBehaviour:
     doAreaDamage: 0
     areaDamageSize: 0
     shotsInSpread: 5
-    spreadAngle: 5.2
+    spreadAngle: 20
   interactionLayers:
     serializedVersion: 2
     m_Bits: 1

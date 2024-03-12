@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Data", menuName = "Frame/Hitscan Frame", order = 1)]
@@ -20,6 +18,11 @@ public class HitscanFrame : RangedFrame
             particle.transform.position = hit.point;
             particle.SetActive(true);
             particle.SendMessage("StartParticle");
+
+            Interactable col;
+
+            if (hit.collider.gameObject.TryGetComponent(out col))
+                col.HitScanHit(this, hit.point);
         }
     }
 }

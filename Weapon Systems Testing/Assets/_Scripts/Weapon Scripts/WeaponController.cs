@@ -9,7 +9,9 @@ public class WeaponController : MonoBehaviour
 
     public Transform projectileSpawnPoint;
 
-    public List<KeyCode> frameKeys = new List<KeyCode>();
+    public KeyCode framePrimaryKey;
+    public KeyCode frameSecondaryKey;
+    public KeyCode frameSwapKey;
 
     // Start is called before the first frame update
     void Start()
@@ -20,16 +22,21 @@ public class WeaponController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        for(int i = 0; i < frameKeys.Count; i++)
+        if  (
+            (currentWeapon.frames[currentWeapon.activeFrame].currentStats.autoUse && Input.GetKey(framePrimaryKey)) ||
+            (!currentWeapon.frames[currentWeapon.activeFrame].currentStats.autoUse && Input.GetKeyDown(framePrimaryKey))
+            )
         {
-            if(
-                (currentWeapon.frames[i].currentStats.autoUse && Input.GetKey(frameKeys[i])) || 
-                (!currentWeapon.frames[i].currentStats.autoUse && Input.GetKeyDown(frameKeys[i]))
-              )
-            {
-                currentWeapon.UseFrame(i);
-            }
+            currentWeapon.UseFramePrimary();
         }
+
+        if (Input.GetKeyDown(frameSecondaryKey))
+        {
+            currentWeapon.UseFrameSecondary();
+        }
+
+        if (Input.GetKeyDown(frameSwapKey))
+            currentWeapon.ChangeFrame();
 
         // Updates the current weapon
         currentWeapon.UpdateWeapon(Time.deltaTime);

@@ -232,7 +232,9 @@ MonoBehaviour:
   currentWeapon: {fileID: 11400000, guid: 8463864d251c4cc46b522c4ccb837b99, type: 2}
   cameraController: {fileID: 3774186691638534710}
   projectileSpawnPoint: {fileID: 1835656663377136975}
-  frameKeys: 
+  framePrimaryKey: 323
+  frameSecondaryKey: 324
+  frameSwapKey: 113
 --- !u!1 &6649520145650409059
 GameObject:
   m_ObjectHideFlags: 0
