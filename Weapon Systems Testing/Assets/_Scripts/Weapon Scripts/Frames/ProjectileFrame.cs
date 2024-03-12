@@ -16,8 +16,30 @@ public class ProjectileFrame : RangedFrame
     }
     protected override void Fire(Transform origin, Vector3 angleOffset)
     {
+        RaycastHit hit;
+        Vector3 rayOrigin = connectedWeapon.controller.cameraController.transform.position;
+
+        // This gets a vector representing the forward direction of the camera
+        // The number at the end controls the severity of the spread angle's effect on the spread grouping
+        Vector3 direction = rayOrigin + connectedWeapon.controller.cameraController.transform.forward * 100;
+        direction = (direction + angleOffset - rayOrigin).normalized;
+
+        Ray ray = new Ray(rayOrigin, direction);
+        Vector3 velocity;
+
+        if (Physics.Raycast(ray, out hit, currentStats.range, interactionLayers))
+        {
+            Debug.Log("Hit");
+            velocity = (hit.point - origin.position).normalized * projectileCurrentStats.projectileSpeed;
+        }
+        else
+        {
+            Debug.Log("Default");
+            velocity = (ray.GetPoint(10) - origin.position).normalized * projectileCurrentStats.projectileSpeed;
+        }
+
         GameObject projectile = ObjectPool.instance.GetPooledObject(projectileCurrentStats.spawnedProjectile.name);
-        projectile.GetComponent<ProjectileController>().StartProjectile(this, origin.position, origin.rotation.eulerAngles + angleOffset, projectileCurrentStats.projectileSpeed, projectileCurrentStats.projectileMass);
+        projectile.GetComponent<ProjectileController>().StartProjectile(this, origin, velocity, projectileCurrentStats.projectileMass);
     }
 }
 

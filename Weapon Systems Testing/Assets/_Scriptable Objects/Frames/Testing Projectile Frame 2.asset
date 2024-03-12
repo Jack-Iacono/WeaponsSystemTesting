@@ -16,7 +16,7 @@ MonoBehaviour:
     name: 
     tooltip: 
     autoUse: 1
-    useTime: 0.3
+    useTime: 1
     damage: 115
     range: 1000
     recoil: 0

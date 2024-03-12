@@ -49,7 +49,7 @@ public class ProjectileController : MonoBehaviour, Interactable
         }
     }
 
-    public void StartProjectile(Frame parentFrame, Vector3 positionOffset, Vector3 rotationOffset, float velocity, float mass = 1)
+    public void StartProjectile(Frame parentFrame, Transform origin, Vector3 velocity, float mass = 1)
     {
         gameObject.SetActive(true);
 
@@ -59,10 +59,10 @@ public class ProjectileController : MonoBehaviour, Interactable
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
 
-        rb.MovePosition(positionOffset);
-        rb.MoveRotation(Quaternion.Euler(rotationOffset));
+        rb.MovePosition(origin.position);
+        rb.MoveRotation(origin.rotation);
 
-        rb.velocity = transform.forward * velocity;
+        rb.velocity = velocity;
 
         projectile.StartProjectile();
     }

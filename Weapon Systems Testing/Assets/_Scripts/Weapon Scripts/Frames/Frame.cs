@@ -163,7 +163,7 @@ public abstract class RangedFrame : Frame
                         if(i == 0)
                             Fire(connectedWeapon.controller.projectileSpawnPoint, Vector3.zero);
                         else
-                            Fire(connectedWeapon.controller.projectileSpawnPoint, new Vector3(UnityEngine.Random.Range(-currentStats.spreadAngle, currentStats.spreadAngle), UnityEngine.Random.Range(-currentStats.spreadAngle, currentStats.spreadAngle), 0));
+                            Fire(connectedWeapon.controller.projectileSpawnPoint, new Vector3(UnityEngine.Random.Range(-currentStats.spreadAngle, currentStats.spreadAngle), UnityEngine.Random.Range(-currentStats.spreadAngle, currentStats.spreadAngle), UnityEngine.Random.Range(-currentStats.spreadAngle, currentStats.spreadAngle)));
                     }
 
                     burstRemaining--;

@@ -13,10 +13,12 @@ MonoBehaviour:
   m_Name: Testing Hitscan Frame
   m_EditorClassIdentifier: 
   baseStats:
+    name: 
+    tooltip: 
     autoUse: 1
     useTime: 1
     damage: 11
-    range: 1000
+    range: 50
     recoil: 0
     adsTime: 0
     hipFire: 0
@@ -28,9 +30,8 @@ MonoBehaviour:
     burstSpeed: 0
     doAreaDamage: 0
     areaDamageSize: 0
-    shotsInSpread: 5
-    spreadGrouping: 0
-    spreadAngle: 0
+    shotsInSpread: 7
+    spreadAngle: 3.9
   interactionLayers:
     serializedVersion: 2
     m_Bits: 1
