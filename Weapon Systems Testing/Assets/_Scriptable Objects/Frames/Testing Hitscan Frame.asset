@@ -12,16 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68c0af78dbeb10642b3e058e2950cecc, type: 3}
   m_Name: Testing Hitscan Frame
   m_EditorClassIdentifier: 
+  frameName: 
+  tooltip: 
   baseStats:
-    name: 
-    tooltip: 
     autoUse: 1
     useTime: 0.1
     damage: 11
     range: 50
-    recoil: 0
-    adsTime: 0
-    hipFire: 0
+    recoil: 0.001
+    adsTime: 0.001
+    hipFire: 0.01
     usePrimaryAmmo: 0
     readyAmmo: 10
     maxReserveAmmo: 100
@@ -29,10 +29,10 @@ MonoBehaviour:
     refillSpeed: 0.01
     refillAmount: 1
     burstLength: 1
-    burstSpeed: 0
+    burstSpeed: 0.001
     doAreaDamage: 0
-    areaDamageSize: 0
-    shotsInSpread: 7
+    areaDamageSize: 0.001
+    shotsInSpread: 5
     spreadAngle: 3.9
   interactionLayers:
     serializedVersion: 2

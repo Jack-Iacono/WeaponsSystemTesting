@@ -1,12 +1,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 
 public abstract class Frame : ScriptableObject
 {
+    public string frameName;
+    [TextArea]
+    public string tooltip;
+
     public FrameStats baseStats;
-    public FrameStats currentStats { get; private set; }
+    public FrameStats currentStats { get; protected set; }
 
     protected TimerManager timerManager = new TimerManager();
     public Weapon connectedWeapon { get; private set; }
@@ -49,15 +54,11 @@ public abstract class Frame : ScriptableObject
     {
         this.connectedWeapon = connectedWeapon;
 
-        // TEMPORARY: Change later for weapon crafting
-        currentStats = baseStats;
-
-        currentAmmo = currentStats.readyAmmo;
-
-        timerManager.Add(ActivateSequenceKey, new Timer(currentStats.useTime, ActivateTimerCallback));
-        timerManager.Add(BurstTimerKey, new Timer(currentStats.burstSpeed, BurstTimerCallback));
-        timerManager.Add(RefillSequenceKey, new Timer(currentStats.refillSpeed, RefillTimerCallback));
-
+        // Initialize the timers
+        timerManager.Add(ActivateSequenceKey, new Timer(1, ActivateTimerCallback));
+        timerManager.Add(BurstTimerKey, new Timer(1, BurstTimerCallback));
+        timerManager.Add(RefillSequenceKey, new Timer(1, RefillTimerCallback));
+        
         activateActions = new Sequence(ActivateSequenceKey);
         activateActions.AddChild(new Action("BeginActivate", BeginActivate));
         activateActions.AddChild(new Action("UpdateActivate", UpdateActivate));
@@ -137,6 +138,11 @@ public abstract class Frame : ScriptableObject
 
     #endregion
 
+    #region Stat Related Methods
+
+    public abstract void CalculateStats(List<Mod> mods);
+
+    #endregion
 }
 
 public abstract class RangedFrame : Frame
@@ -159,6 +165,8 @@ public abstract class RangedFrame : Frame
         }
     }
     protected abstract void Fire(Transform origin, Vector3 angleOffset);
+
+    #region Behavior Methods
 
     protected override Node.Status BeginActivate()
     {
@@ -261,15 +269,32 @@ public abstract class RangedFrame : Frame
     {
         refillBusy = false;
     }
+
+    #endregion
+
+    public override void CalculateStats(List<Mod> mods)
+    {
+        // Gets the stats that derive from the frame itself
+        currentStats = new FrameStats();
+        currentStats += baseStats;
+
+        foreach(Mod m in mods)
+        {
+            Debug.Log($"Adding {m.modName} to the frame");
+            currentStats += m.frameStats;
+        }
+
+        timerManager.timers[ActivateSequenceKey].SetMaxTime(currentStats.useTime);
+        timerManager.timers[BurstTimerKey].SetMaxTime(currentStats.burstSpeed);
+        timerManager.timers[RefillSequenceKey].SetMaxTime(currentStats.refillSpeed);
+
+        currentAmmo = currentStats.readyAmmo;
+    }
 }
 
 [Serializable]
 public class FrameStats
 {
-    public string name;
-    [TextArea]
-    public string tooltip;
-
     [Header("Use Stats")]
     public bool autoUse;
     public float useTime;
@@ -294,9 +319,9 @@ public class FrameStats
     public int refillAmount;
 
     [Header("Fire Style Stats")]
-    [Range(1f,100f)]
+    [Range(0f,100f)]
     public int burstLength = 1;
-    [Range(0,5)]
+    [Range(-5,5)]
     public float burstSpeed;
 
     [Header("Area Damage Stats Stats")]
@@ -304,9 +329,40 @@ public class FrameStats
     public float areaDamageSize;
 
     [Header("Spread Shot Stats")]
-    [Range(1,100)]
+    [Range(0,100)]
     public int shotsInSpread = 1;
-    [Range(0,20)]
+    [Range(-20,20)]
     [Tooltip("This number is representative of HALF of the spread angle, not the full cone")]
     public float spreadAngle;
+
+    public static FrameStats operator +(FrameStats f1, FrameStats f2)
+    {
+        f1.autoUse = f2.autoUse ? true: f1.autoUse;
+        f1.useTime = Mathf.Clamp(f1.useTime + f2.useTime, 0, float.MaxValue);
+
+        f1.damage = Mathf.Clamp(f1.damage + f2.damage, 0.01f, float.MaxValue);
+        f1.range = Mathf.Clamp(f1.range + f2.range, 0.01f, float.MaxValue);
+        f1.recoil = Mathf.Clamp(f1.recoil + f2.recoil, 0.001f, float.MaxValue);
+        f1.adsTime = Mathf.Clamp(f1.adsTime + f2.adsTime, 0.001f, float.MaxValue);
+        f1.hipFire = Mathf.Clamp(f1.hipFire + f2.hipFire, 0.01f, float.MaxValue);
+
+        f1.usePrimaryAmmo = f2.usePrimaryAmmo ? true : f1.usePrimaryAmmo;
+        f1.readyAmmo = Mathf.Clamp(f1.readyAmmo + f2.readyAmmo, 1, int.MaxValue);
+        f1.maxReserveAmmo = Mathf.Clamp(f1.maxReserveAmmo + f2.maxReserveAmmo, 1, int.MaxValue);
+        f1.ammoPerShot = Mathf.Clamp(f1.ammoPerShot + f2.ammoPerShot, 1, int.MaxValue);
+
+        f1.refillSpeed = Mathf.Clamp(f1.refillSpeed + f2.refillSpeed, 0.001f, float.MaxValue);
+        f1.refillAmount = Mathf.Clamp(f1.refillAmount + f2.refillAmount, 1, int.MaxValue);
+
+        f1.burstLength = Mathf.Clamp(f1.burstLength + f2.burstLength, 1, int.MaxValue);
+        f1.burstSpeed = Mathf.Clamp(f1.burstSpeed + f2.burstSpeed, 0.001f, float.MaxValue);
+
+        f1.doAreaDamage = f2.doAreaDamage ? true : f1.doAreaDamage;
+        f1.areaDamageSize = Mathf.Clamp(f1.areaDamageSize + f2.areaDamageSize, 0.001f, float.MaxValue);
+
+        f1.shotsInSpread = Mathf.Clamp(f1.shotsInSpread + f2.shotsInSpread, 1, int.MaxValue);
+        f1.spreadAngle = Mathf.Clamp(f1.spreadAngle + f2.spreadAngle, 0.001f, float.MaxValue);
+
+        return f1;
+    }
 }

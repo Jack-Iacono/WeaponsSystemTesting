@@ -11,11 +11,14 @@ public class Weapon : ScriptableObject
     public new string name;
     public string tooltip;
 
-    // This exists purely to allow me to add more frames easily later
-    private const int maxFrames = 2;
-    public List<Frame> frames = new List<Frame>();
+    // This exists purely to allow me to add more frames easily later, not for inital use
+    private const int MaxFrames = 1;
+    public List<Frame> frames = new List<Frame>(MaxFrames);
+
+    [NonSerialized]
     public int activeFrame = 0;
 
+    public List<Mod> mods = new List<Mod>();
     public int modBudget;
 
     public virtual void Intialize(WeaponController weapon) 
@@ -26,6 +29,7 @@ public class Weapon : ScriptableObject
         for(int i = 0; i < frames.Count; i++)
         {
             frames[i].Initialize(this);
+            frames[i].CalculateStats(mods);
 
             // Overrides the weapon's normal ammo stuff
             if (frames[i].currentStats.usePrimaryAmmo)
@@ -56,11 +60,17 @@ public class Weapon : ScriptableObject
     public virtual void CalculateStats() { }
     public virtual void ChangeFrame()
     {
-        if (activeFrame < maxFrames - 1)
+        if (activeFrame < MaxFrames - 1)
             activeFrame++;
         else
             activeFrame = 0;
 
         Debug.Log("Active Frame: " + activeFrame);
     }
+
+    #region Events
+
+
+
+    #endregion
 }

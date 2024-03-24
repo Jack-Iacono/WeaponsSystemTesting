@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84eabde07dfaa7c438dd6d24d78bace0, type: 3}
+  m_Name: TestingMod
+  m_EditorClassIdentifier: 
+  modName: Testing Mod 1
+  tooltip: You should not have this either
+  equipCost: 1
+  frameStats:
+    autoUse: 0
+    useTime: 0
+    damage: 100000
+    range: 0
+    recoil: 0
+    adsTime: 0
+    hipFire: 0
+    usePrimaryAmmo: 0
+    readyAmmo: 0
+    maxReserveAmmo: 0
+    ammoPerShot: 0
+    refillSpeed: 0
+    refillAmount: 0
+    burstLength: 1
+    burstSpeed: 0
+    doAreaDamage: 0
+    areaDamageSize: 0
+    shotsInSpread: 1
+    spreadAngle: 0

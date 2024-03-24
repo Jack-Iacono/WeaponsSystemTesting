@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class WeaponController : MonoBehaviour
 {
+    public static WeaponController instance;
+
     public Weapon currentWeapon;
     public CameraController cameraController;
 
