@@ -33,5 +33,5 @@ MonoBehaviour:
     burstSpeed: 0
     doAreaDamage: 0
     areaDamageSize: 0
-    shotsInSpread: 1
+    shotsInSpread: 0
     spreadAngle: 0

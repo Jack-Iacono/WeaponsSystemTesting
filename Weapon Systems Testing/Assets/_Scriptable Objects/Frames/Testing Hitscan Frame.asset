@@ -23,7 +23,7 @@ MonoBehaviour:
     adsTime: 0.001
     hipFire: 0.01
     usePrimaryAmmo: 0
-    readyAmmo: 10
+    readyAmmo: 100
     maxReserveAmmo: 100
     ammoPerShot: 1
     refillSpeed: 0.01

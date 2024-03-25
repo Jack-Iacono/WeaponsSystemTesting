@@ -21,6 +21,9 @@ public class Weapon : ScriptableObject
     public List<Mod> mods = new List<Mod>();
     public int modBudget;
 
+    public delegate void FrameChange(Frame frame, List<Mod> mods);
+    public static event FrameChange OnFrameChange;
+
     public virtual void Intialize(WeaponController weapon) 
     {
         controller = weapon;
@@ -38,6 +41,8 @@ public class Weapon : ScriptableObject
                 frames[i].currentAmmo = frames[i].currentStats.readyAmmo;
             }
         }
+
+        OnFrameChange?.Invoke(frames[activeFrame], mods);
     }
     public virtual void UpdateWeapon(float dt) 
     {
@@ -65,12 +70,7 @@ public class Weapon : ScriptableObject
         else
             activeFrame = 0;
 
-        Debug.Log("Active Frame: " + activeFrame);
+        OnFrameChange?.Invoke(frames[activeFrame], mods);
     }
 
-    #region Events
-
-
-
-    #endregion
 }

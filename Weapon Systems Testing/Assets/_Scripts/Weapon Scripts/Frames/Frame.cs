@@ -47,6 +47,14 @@ public abstract class Frame : ScriptableObject
 
     #endregion
 
+    #region Events
+
+    // Could be optimized depending on scenario, but I'll do this if I need to
+    public delegate void FrameUpdate(Frame frame);
+    public static event FrameUpdate OnFrameDataChange;
+
+    #endregion
+
     public abstract void ActivatePrimary();
     public abstract void ActivateSecondary();
 
@@ -143,6 +151,15 @@ public abstract class Frame : ScriptableObject
     public abstract void CalculateStats(List<Mod> mods);
 
     #endregion
+
+    #region Event Methods
+
+    protected void NotifyFrameDataChange()
+    {
+        OnFrameDataChange?.Invoke(this);
+    }
+
+    #endregion
 }
 
 public abstract class RangedFrame : Frame
@@ -160,7 +177,6 @@ public abstract class RangedFrame : Frame
     {
         if (frameBehavior.GetCurrentSequenceName() == ReadySequenceKey)
         {
-            Debug.Log("Start Refill");
             frameBehavior.StartSequence(RefillSequenceKey);
         }
     }
@@ -195,6 +211,8 @@ public abstract class RangedFrame : Frame
 
                     burstActivationBusy = true;
                     timerManager.timers[BurstTimerKey].Start();
+
+                    NotifyFrameDataChange();
                 }
             }
             else
@@ -237,12 +255,17 @@ public abstract class RangedFrame : Frame
             if(currentStats.refillAmount == 0)
             {
                 currentAmmo = currentStats.readyAmmo;
+                NotifyFrameDataChange();
                 return Node.Status.SUCCESS;
             }
             else
             {
                 currentAmmo = Mathf.Clamp(currentAmmo + currentStats.refillAmount, 0, currentStats.readyAmmo);
-                Debug.Log("Current Ammo: " + currentAmmo);
+
+                refillBusy = true;
+                timerManager.timers[RefillSequenceKey].Start();
+
+                NotifyFrameDataChange();
             }
         }
 
@@ -320,7 +343,7 @@ public class FrameStats
 
     [Header("Fire Style Stats")]
     [Range(0f,100f)]
-    public int burstLength = 1;
+    public int burstLength;
     [Range(-5,5)]
     public float burstSpeed;
 
@@ -330,7 +353,7 @@ public class FrameStats
 
     [Header("Spread Shot Stats")]
     [Range(0,100)]
-    public int shotsInSpread = 1;
+    public int shotsInSpread;
     [Range(-20,20)]
     [Tooltip("This number is representative of HALF of the spread angle, not the full cone")]
     public float spreadAngle;

@@ -416,7 +416,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a6a11906a39e4d4d92e271add12a646, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hudScreenController: {fileID: 0}
+  hudScreenController: {fileID: 1936016928}
 --- !u!1 &349455029
 GameObject:
   m_ObjectHideFlags: 0
@@ -798,6 +798,7 @@ GameObject:
   - component: {fileID: 1936016927}
   - component: {fileID: 1936016926}
   - component: {fileID: 1936016925}
+  - component: {fileID: 1936016928}
   m_Layer: 5
   m_Name: HUD Screen
   m_TagString: Untagged
@@ -888,6 +889,19 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &1936016928
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1936016923}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23ce82a94e7f6564e8f651117d4c63bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ammoText: {fileID: 2005526466}
 --- !u!1 &1976512294
 GameObject:
   m_ObjectHideFlags: 0
@@ -998,7 +1012,7 @@ GameObject:
   - component: {fileID: 2005526467}
   - component: {fileID: 2005526466}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Ammo Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
