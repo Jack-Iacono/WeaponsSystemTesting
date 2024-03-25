@@ -15,6 +15,8 @@ MonoBehaviour:
   name: Testing Weapon
   tooltip: You shouldn't have this
   frames:
-  - {fileID: 11400000, guid: 0d73a26dbf86e124480fcefe9b55e7d9, type: 2}
-  mods: []
-  modBudget: 0
+  - {fileID: 11400000, guid: 058dfc4f9a513ff41ac8e38d0c519684, type: 2}
+  mods:
+  - {fileID: 11400000, guid: b51521c5fd635cb4f95856bccc35a590, type: 2}
+  - {fileID: 11400000, guid: 1400527d6d602bc4097510e5c7c3cb9b, type: 2}
+  modBudget: 5
