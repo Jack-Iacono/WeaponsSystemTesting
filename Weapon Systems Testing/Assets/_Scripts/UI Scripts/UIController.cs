@@ -28,9 +28,9 @@ public abstract class UIController : MonoBehaviour
             screens[i].Initialize(this);
 
             if (i == 0)
-                screens[i].ShowScreen();
+                screens[i].ForceShowScreen();
             else
-                screens[i].HideScreen();
+                screens[i].ForceHideScreen();
         }
 
         screens[0].ShowScreen();
@@ -45,13 +45,11 @@ public abstract class UIController : MonoBehaviour
 
     public void ScreenHideCallback()
     {
-        //screens[nextScreen].ShowScreen();
-        //currentScreen = nextScreen;
-        //nextScreen = -1;
+        
     }
     public void ScreenShowCallback()
     {
-        // Do nothing for now
+        
     }
 
     public void ChangeToScreen(int i)
@@ -72,7 +70,7 @@ public abstract class UIController : MonoBehaviour
 
     #region Events
 
-    private void OnGamePause(object sender, bool e)
+    protected virtual void OnGamePause(object sender, bool e)
     {
         if (e)
             ChangeToScreen(1);

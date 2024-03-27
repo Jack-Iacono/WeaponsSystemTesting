@@ -22,15 +22,28 @@ public class ScreenController : MonoBehaviour
 
     public virtual void ShowScreen()
     {
-        StopAllCoroutines();
+        //StopAllCoroutines();
+
         gameObject.SetActive(true);
-        StartCoroutine(ShowScreenCoroutine());
+        //StartCoroutine(ShowScreenCoroutine());
     }
     public virtual void HideScreen()
     {
-        StopAllCoroutines();
-        if(isActiveAndEnabled)
-            StartCoroutine(HideScreenCoroutine());
+        //StopAllCoroutines();
+
+        //if(isActiveAndEnabled)
+        //StartCoroutine(HideScreenCoroutine());
+
+        gameObject.SetActive(false);
+    }
+
+    public void ForceShowScreen()
+    {
+        gameObject.SetActive(true);
+    }
+    public void ForceHideScreen()
+    {
+        gameObject.SetActive(false);
     }
 
     protected IEnumerator ShowScreenCoroutine()
@@ -40,7 +53,6 @@ public class ScreenController : MonoBehaviour
         yield return new WaitForSeconds(showAnimTime);
 
         parentController.ScreenHideCallback();
-        Debug.Log("Show Screen Finish" + name);
     }
     protected IEnumerator HideScreenCoroutine()
     {

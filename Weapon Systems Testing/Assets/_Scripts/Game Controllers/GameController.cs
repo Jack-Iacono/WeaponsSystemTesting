@@ -7,7 +7,7 @@ public class GameController : MonoBehaviour
 {
     public static GameController instance;
 
-    public static bool isPaused;
+    public static bool isGamePaused;
 
     public event EventHandler<bool> OnGamePause;
 
@@ -24,32 +24,27 @@ public class GameController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        UIController.instance.OnMenuOpen += OnMenuOpen;
-        UIController.instance.OnMenuClose += OnMenuClose;
+        
     }
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            isPaused = !isPaused;
-            OnGamePause?.Invoke(this, isPaused);
+            ChangePauseState(!isGamePaused);
         }
     }
-
     private void OnDestroy()
     {
-        instance = null;
+        if (instance == this)
+            instance = null;
     }
 
-    #region Events
-    private void OnMenuClose(object sender, EventArgs e)
+    private void ChangePauseState(bool b)
     {
-        isPaused = false;
+        isGamePaused = b;
+        Cursor.lockState = b ? CursorLockMode.None : CursorLockMode.Locked;
+        OnGamePause?.Invoke(this, isGamePaused);
     }
-    private void OnMenuOpen(object sender, EventArgs e)
-    {
-        isPaused = true;
-    }
-    #endregion
+
 }

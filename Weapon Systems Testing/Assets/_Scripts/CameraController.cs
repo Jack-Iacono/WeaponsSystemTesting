@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
@@ -5,6 +6,8 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
+    public static CameraController instance;
+
     [SerializeField][Tooltip("The PlayerController that this object is attached to")]
     private PlayerController player;
 
@@ -23,6 +26,13 @@ public class CameraController : MonoBehaviour
 
     #endregion
 
+    private void Awake()
+    {
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(instance);
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -35,12 +45,9 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        MoveCamera();
-
-        // TEMPORARY
-        if (Input.GetKey(KeyCode.Escape))
+        if(!GameController.isGamePaused)
         {
-            Cursor.lockState = CursorLockMode.None;
+            MoveCamera();
         }
     }
 
@@ -60,5 +67,4 @@ public class CameraController : MonoBehaviour
     {
         return new Ray(transform.position, transform.forward);
     }
-    
 }

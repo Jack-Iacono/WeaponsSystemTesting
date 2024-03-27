@@ -16,7 +16,7 @@ public class ProjectileFrame : RangedFrame
     }
     protected override void Fire(Transform origin, Vector3 angleOffset)
     {
-        SoundManager.PlaySound(SoundManager.shoot);
+        SoundManager.PlaySound(SoundManager.instance.shoot);
 
         RaycastHit hit;
         Vector3 rayOrigin = connectedWeapon.controller.cameraController.transform.position;

@@ -1,10 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
 public class SoundData
 {
+    [Range(0,3)]
     public float volume;
+    [Range(0.5f, 1.5f)]
     public float pitch;
     public AudioClip clip;
 

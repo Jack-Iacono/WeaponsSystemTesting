@@ -5,18 +5,27 @@ using UnityEngine;
 
 public class SoundManager : MonoBehaviour
 {
-    public static AudioSource audioSrc;
+    public static SoundManager instance { get; private set; }
 
-    public AudioClip shootClip;
+    private static AudioSource audioSrc;
 
-    public static SoundData shoot { get; private set; } = new SoundData();
+    public SoundData shoot = new SoundData();
 
-    // Start is called before the first frame update
+    private void Awake()
+    {
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(this);
+    }
     void Start()
     {
         audioSrc = GetComponent<AudioSource>();
-
-        shoot.SetSoundData(shootClip, 0.2f, 1f);
+    }
+    private void OnDestroy()
+    {
+        if (instance == this)
+            instance = null;
     }
 
     public static void PlaySound(SoundData sound)
@@ -25,7 +34,7 @@ public class SoundManager : MonoBehaviour
     }
     public static void PlaySound(SoundData sound, AudioSource source)
     {
-        source.pitch = sound.pitch;
+        source.pitch = Random.Range(sound.pitch - 0.01f, sound.pitch + 0.01f);
         source.PlayOneShot(sound.clip, sound.volume);
     }
 
