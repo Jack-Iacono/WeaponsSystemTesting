@@ -15,9 +15,11 @@ public class PlayerController : MonoBehaviour
     [Tooltip("Negative values will pull player downward, Positive value will push them up")]
     private float gravity = -0.98f;
 
+    public LayerMask environmentLayers;
+
     private KeyCode keyJump = KeyCode.Space;
 
-    private float moveY = 0;
+    public float moveY = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -48,6 +50,10 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
+            // Sets into fall if hitting a ceiling
+            if (Physics.Raycast(transform.position, Vector3.up, 1.1f, environmentLayers) && moveY > 0)
+                moveY = 0;
+
             if(Mathf.Abs(0 - moveY) < 0.3f)
                 moveY += gravity * 0.75f * Time.deltaTime;
             else
@@ -58,4 +64,17 @@ public class PlayerController : MonoBehaviour
 
         charCont.Move(finalMove * Time.deltaTime * moveSpeed);
     }
+
+    #region Wallrun Methods
+
+    public void RegisterWallrun(WallRunController wallRunCont)
+    {
+        wallRunCont.OnWallrunStatusChange += OnWallrunStatusChange;
+    }
+    private void OnWallrunStatusChange(bool startEnd)
+    {
+        Debug.Log("Wallrunning: " + startEnd);
+    }
+
+    #endregion
 }

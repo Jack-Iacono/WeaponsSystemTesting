@@ -17,8 +17,6 @@ public class GameController : MonoBehaviour
             Destroy(this);
         else
             instance = this;
-
-        Debug.Log("Instance Set");
     }
 
     // Start is called before the first frame update
