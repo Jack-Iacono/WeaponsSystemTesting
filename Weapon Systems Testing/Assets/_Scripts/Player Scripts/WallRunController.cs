@@ -12,9 +12,12 @@ public class WallRunController : MonoBehaviour
     public float wallDotDeviation = 0;
 
     private RaycastHit wallHit;
+    public Vector3 wallParallel { get; private set; }
+    public Vector3 wallPerp { get; private set; }
     private Transform parentTransform;
 
     private PlayerController playerController;
+    private CharacterController charCont;
 
     private LayerMask environmentLayers;
 
@@ -27,6 +30,7 @@ public class WallRunController : MonoBehaviour
     {
         parentTransform = transform;
         playerController = GetComponent<PlayerController>();
+        charCont = GetComponent<CharacterController>();
         environmentLayers = playerController.environmentLayers;
 
         playerController.RegisterWallrun(this);
@@ -59,12 +63,20 @@ public class WallRunController : MonoBehaviour
         // If the player is on the ground, don't bother checking for walls
         if (Physics.Raycast(parentTransform.position, -parentTransform.up, groundCheckDistance, environmentLayers)) return false;
 
-        bool onWall = Physics.Raycast(parentTransform.position, parentTransform.right, out wallHit, wallCheckDistance, environmentLayers) ? true : Physics.Raycast(parentTransform.position, -parentTransform.right, out wallHit, wallCheckDistance, environmentLayers) ? true : false;
+        int onWall = Physics.Raycast(parentTransform.position, parentTransform.right, out wallHit, wallCheckDistance, environmentLayers) ? 0 : Physics.Raycast(parentTransform.position, -parentTransform.right, out wallHit, wallCheckDistance, environmentLayers) ? 1 : -1;
 
-        if (onWall)
+        if (onWall != -1)
         {
             Vector3 normal = wallHit.normal;
             Vector3 check = new Vector3(normal.x, 0, normal.z).normalized;
+
+            wallPerp = normal;
+
+            // Gets the vector parallel to the wall in the direction that the player is facing
+            if (onWall == 0)
+                wallParallel = new Vector3(normal.z, 0, -normal.x).normalized;
+            else if (onWall == 1)
+                wallParallel = new Vector3(-normal.z, 0, normal.x).normalized;
 
             // Returns the deviation of the normal from the check number
             return Vector3.Dot(normal, check) >= 1 - wallDotDeviation;
@@ -72,4 +84,5 @@ public class WallRunController : MonoBehaviour
 
         return false;
     }
+
 }
