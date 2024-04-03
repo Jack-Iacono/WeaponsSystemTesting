@@ -48,6 +48,25 @@ public class PlayerController : MonoBehaviour
     private float wallJumpTimer;
     private const float wallJumpTime = 0.5f;
 
+    [SerializeField]
+    private float wallRunTime;
+    private float wallRunTimer;
+
+    #endregion
+
+    #region Double Jumping Variables
+
+    [Header("Double Jump Variables")]
+    [SerializeField]
+    private bool canDoubleJump = true;
+    [SerializeField]
+    private int doubleJumpCount = 1;
+    private int currentDoubleJumps;
+    [SerializeField]
+    private float doubleJumpHeightAmp = 1;
+    [SerializeField]
+    private float doubleJumpDirectionAmp = 1;
+
     #endregion
 
     // Start is called before the first frame update
@@ -94,6 +113,8 @@ public class PlayerController : MonoBehaviour
 
         if (charCont.isGrounded)
         {
+            currentDoubleJumps = doubleJumpCount;
+
             if(currentInput.y != 0)
             {
                 currentMove.y = jumpHeight;
@@ -107,6 +128,16 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
+            if (canDoubleJump && currentDoubleJumps > 0 && currentInput.y != 0)
+            {
+                currentMove.y = jumpHeight * doubleJumpHeightAmp;
+
+                currentMove.x += moveX * doubleJumpDirectionAmp;
+                currentMove.z += moveZ * doubleJumpDirectionAmp;
+
+                currentDoubleJumps--;
+            }
+
             // Sets into fall if hitting a ceiling
             if (Physics.Raycast(transform.position, Vector3.up, 1.1f, environmentLayers) && currentMove.y > 0)
                 currentMove.y = 0;
@@ -122,21 +153,28 @@ public class PlayerController : MonoBehaviour
     }
     private void CalculateWallrunPlayerMove()
     {
-        Debug.Log(wallJumpTimer);
+        currentDoubleJumps = doubleJumpCount;
+
         if (currentInput.y > 0)
         {
-            currentMove = ( wallRunController.wallPerp + Vector3.up ) * jumpHeight * 1.5f;
+            currentMove += ( wallRunController.wallPerp * 1.5f + Vector3.up / 2 ) * jumpHeight * 1.5f;
             wallJumpTimer = wallJumpTime;
         }
         else if(wallJumpTimer == 0)
         {
-            currentMove = maxNormalSpeed * 1.5f * wallRunController.wallParallel;
+            if (wallRunTimer > 0)
+            {
+                currentMove = maxNormalSpeed * 1.5f * wallRunController.wallParallel;
+                wallRunTimer -= Time.deltaTime;
+            }
+            else
+            {
+                currentMove.y -= gravity * -1 * Time.deltaTime;
+            }
         }
 
         if(wallJumpTimer > 0)
             wallJumpTimer -= Time.deltaTime;
-
-        Debug.Log(currentMove);
     }
 
     private void MovePlayer()
@@ -156,6 +194,7 @@ public class PlayerController : MonoBehaviour
 
         if (isWallrun)
         {
+            wallRunTimer = wallRunTime;
             currentMove.y = 0;
             wallJumpTimer = 0;
         }

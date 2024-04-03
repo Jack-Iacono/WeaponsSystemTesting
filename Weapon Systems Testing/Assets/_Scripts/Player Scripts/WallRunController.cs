@@ -1,15 +1,22 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(PlayerController))]
 public class WallRunController : MonoBehaviour
 {
-    public float wallCheckDistance;
-    public float groundCheckDistance;
+    private float wallCheckDistance;
+    [SerializeField]
+    private float wallCheckDistOnWall = 3f;
+    [SerializeField]
+    private float wallCheckDistOffWall = 0.5f;
+    [SerializeField]
+    private float groundCheckDistance;
+    [SerializeField]
     [Tooltip("How slanted a wall can be before you cannot wallrun on it. Applies to both directions of slant.")]
-    public float wallDotDeviation = 0;
+    private float wallDotDeviation = 0;
 
     private RaycastHit wallHit;
     public Vector3 wallParallel { get; private set; }
@@ -33,6 +40,8 @@ public class WallRunController : MonoBehaviour
         charCont = GetComponent<CharacterController>();
         environmentLayers = playerController.environmentLayers;
 
+        wallCheckDistance = wallCheckDistOffWall;
+
         playerController.RegisterWallrun(this);
     }
     private void FixedUpdate()
@@ -45,6 +54,8 @@ public class WallRunController : MonoBehaviour
                 {
                     OnWallrunStatusChange?.Invoke(true);
                     isWallrunning = true;
+
+                    wallCheckDistance = wallCheckDistOnWall;
                 }
             }
             else
@@ -53,6 +64,8 @@ public class WallRunController : MonoBehaviour
                 {
                     OnWallrunStatusChange?.Invoke(false);
                     isWallrunning = false;
+
+                    wallCheckDistance = wallCheckDistOffWall;
                 }
             } 
         }
