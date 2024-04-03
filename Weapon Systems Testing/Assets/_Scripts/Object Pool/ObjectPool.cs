@@ -11,15 +11,17 @@ public class ObjectPool : MonoBehaviour
 
     private Dictionary<string, List<GameObject>> _pooledObjects = new Dictionary<string, List<GameObject>>();
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
-        // Create a Singleton
-        if(instance != null && instance != this)
+        if (instance != null && instance != this)
             Destroy(this);
         else
             instance = this;
+    }
 
+    // Start is called before the first frame update
+    void Start()
+    {
         // Runs through each of the desired objects to pool
         foreach(PooledObject p in _objectsToPool)
         {

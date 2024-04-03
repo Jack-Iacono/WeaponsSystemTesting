@@ -5,6 +5,8 @@ public class HitscanFrame : RangedFrame
 {
     protected override void Fire(Transform origin, Vector3 angleOffset)
     {
+        SoundManager.PlaySound(SoundManager.instance.shoot);
+
         RaycastHit hit;
         Vector3 rayOrigin = connectedWeapon.controller.cameraController.transform.position;
         // This gets a vector representing the forward direction of the camera
