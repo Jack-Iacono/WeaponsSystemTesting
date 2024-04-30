@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84eabde07dfaa7c438dd6d24d78bace0, type: 3}
   m_Name: BurstMod
   m_EditorClassIdentifier: 
-  modName: 
-  tooltip: 
+  modName: Burst Mod
+  modID: 2
+  tooltip: More Burst, More Fun
   equipCost: 0
   frameStats:
     autoUse: 0

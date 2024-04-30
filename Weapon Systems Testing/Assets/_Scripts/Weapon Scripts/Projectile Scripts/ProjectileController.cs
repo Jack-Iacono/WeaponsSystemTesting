@@ -10,7 +10,7 @@ public class ProjectileController : MonoBehaviour, Interactable
 
     public Frame parentFrame { get; private set; }
 
-    private Vector3 velocityStore = Vector3.zero;
+    private Vector3 currentMoveStore = Vector3.zero;
     public void Initialize()
     {
         // Instantiates a new projectile script
@@ -24,7 +24,7 @@ public class ProjectileController : MonoBehaviour, Interactable
     }
     private void LateUpdate()
     {
-        velocityStore = rb.velocity;
+        currentMoveStore = rb.velocity;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -49,7 +49,7 @@ public class ProjectileController : MonoBehaviour, Interactable
         }
     }
 
-    public void StartProjectile(Frame parentFrame, Transform origin, Vector3 velocity, float mass = 1)
+    public void StartProjectile(Frame parentFrame, Transform origin, Vector3 currentMove, float mass = 1)
     {
         gameObject.SetActive(true);
 
@@ -62,7 +62,7 @@ public class ProjectileController : MonoBehaviour, Interactable
         rb.MovePosition(origin.position);
         rb.MoveRotation(origin.rotation);
 
-        rb.velocity = velocity;
+        rb.velocity = currentMove;
 
         projectile.StartProjectile();
     }

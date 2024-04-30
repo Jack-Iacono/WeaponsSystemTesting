@@ -27,19 +27,19 @@ public class ProjectileFrame : RangedFrame
         direction = (direction + angleOffset - rayOrigin).normalized;
 
         Ray ray = new Ray(rayOrigin, direction);
-        Vector3 velocity;
+        Vector3 currentMove;
 
         if (Physics.Raycast(ray, out hit, currentStats.range, interactionLayers))
         {
-            velocity = (hit.point - origin.position).normalized * projectileCurrentStats.projectileSpeed;
+            currentMove = (hit.point - origin.position).normalized * projectileCurrentStats.projectileSpeed;
         }
         else
         {
-            velocity = (ray.GetPoint(10) - origin.position).normalized * projectileCurrentStats.projectileSpeed;
+            currentMove = (ray.GetPoint(10) - origin.position).normalized * projectileCurrentStats.projectileSpeed;
         }
 
         GameObject projectile = ObjectPool.instance.GetPooledObject(projectileCurrentStats.spawnedProjectile.name);
-        projectile.GetComponent<ProjectileController>().StartProjectile(this, origin, velocity, projectileCurrentStats.projectileMass);
+        projectile.GetComponent<ProjectileController>().StartProjectile(this, origin, currentMove, projectileCurrentStats.projectileMass);
     }
 }
 

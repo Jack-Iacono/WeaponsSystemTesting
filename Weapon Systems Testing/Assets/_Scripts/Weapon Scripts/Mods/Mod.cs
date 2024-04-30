@@ -4,6 +4,8 @@ using UnityEngine;
 public class Mod : ScriptableObject
 {
     public string modName;
+    public int modID;
+    [TextArea]
     public string tooltip;
 
     public int equipCost;

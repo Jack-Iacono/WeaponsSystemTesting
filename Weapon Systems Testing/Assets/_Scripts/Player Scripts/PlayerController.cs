@@ -6,6 +6,8 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private CharacterController charCont;
+    [SerializeField]
+    private CameraController cameraCont;
 
     [Header("Movement Variables")]
     [SerializeField]
@@ -39,6 +41,9 @@ public class PlayerController : MonoBehaviour
 
     private Vector3 currentInput = Vector3.zero;
     private Vector3 currentMove = Vector3.zero;
+
+    private Vector3 previousFramePosition = Vector3.zero;
+    private Vector3 velocity = Vector3.zero;
 
     #region Wallrun Variables
 
@@ -93,6 +98,14 @@ public class PlayerController : MonoBehaviour
             }
 
             MovePlayer();
+        }
+    }
+    private void FixedUpdate()
+    {
+        if (!GameController.isGamePaused)
+        {
+            velocity = (transform.position - previousFramePosition) / Time.fixedDeltaTime;
+            previousFramePosition = transform.position;
         }
     }
 
@@ -182,6 +195,14 @@ public class PlayerController : MonoBehaviour
         charCont.Move(currentMove * Time.deltaTime);
     }
 
+    public void Die()
+    {
+        charCont.enabled = false;
+        transform.position = Vector3.up * 5;
+        charCont.enabled = true;
+        Debug.Log("Die");
+    }
+
     #region Wallrun Methods
 
     public void RegisterWallrun(WallRunController wallRunCont)
@@ -198,6 +219,19 @@ public class PlayerController : MonoBehaviour
             currentMove.y = 0;
             wallJumpTimer = 0;
         }
+    }
+
+    #endregion
+
+    #region Get Methods
+
+    public Vector3 GetVelocity()
+    {
+        return velocity;
+    }
+    public Vector3 GetHorizontalVelocity()
+    {
+        return new Vector3(velocity.x, 0, velocity.z);
     }
 
     #endregion

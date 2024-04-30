@@ -48,7 +48,7 @@ public class WallRunController : MonoBehaviour
     {
         if (!GameController.isGamePaused)
         {
-            if (CheckForWall())
+            if (CheckForWall() && playerController.GetHorizontalVelocity().magnitude > 10)
             {
                 if(!isWallrunning)
                 {

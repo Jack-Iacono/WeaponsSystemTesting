@@ -32,8 +32,8 @@ MonoBehaviour:
     burstSpeed: 0.001
     doAreaDamage: 0
     areaDamageSize: 0.001
-    shotsInSpread: 5
+    shotsInSpread: 1
     spreadAngle: 3.9
   interactionLayers:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 257

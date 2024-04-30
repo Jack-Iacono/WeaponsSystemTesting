@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: TestingMod
   m_EditorClassIdentifier: 
   modName: Testing Mod 1
+  modID: 1
   tooltip: You should not have this either
   equipCost: 1
   frameStats:

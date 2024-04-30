@@ -7,6 +7,7 @@ using UnityEngine;
 public abstract class Frame : ScriptableObject
 {
     public string frameName;
+    public int modID;
     [TextArea]
     public string tooltip;
 

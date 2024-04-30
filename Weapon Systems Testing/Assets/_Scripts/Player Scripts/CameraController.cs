@@ -67,4 +67,9 @@ public class CameraController : MonoBehaviour
     {
         return new Ray(transform.position, transform.forward);
     }
+
+    public void SetFOV(float fov)
+    {
+        cam.fieldOfView = fov;
+    }
 }
