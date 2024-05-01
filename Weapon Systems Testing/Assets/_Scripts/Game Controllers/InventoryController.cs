@@ -7,8 +7,8 @@ public class InventoryController : MonoBehaviour
 {
     public static InventoryController instance;
 
-    public List<Mod> modList { get; private set; } = new List<Mod>();
-    public List<Frame> frameList { get; private set; } = new List<Frame>();
+    public List<Mod> modList = new List<Mod>();
+    public List<Frame> frameList = new List<Frame>();
     public List<Weapon> weaponList { get; private set; } = new List<Weapon>();
 
     private void Awake()
@@ -22,6 +22,12 @@ public class InventoryController : MonoBehaviour
     {
         if(instance == this)
             instance = null;
+    }
+
+    private void Start()
+    {
+        // TEMPORARY, remove when I have all weapons added
+        weaponList.Add(new Weapon());
     }
 
     #region Inventory Access Methods
@@ -54,6 +60,12 @@ public class InventoryController : MonoBehaviour
     }
     #endregion
 
+    #region Function Methods
 
+    public void ChangeFrame(int index)
+    {
+        WeaponController.instance.currentWeapon.SwapFrame(frameList[index]);
+    }
 
+    #endregion
 }

@@ -2,18 +2,18 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Timeline;
 
-[CreateAssetMenu(fileName = "Data", menuName = "Weapon/Weapon", order = 1)]
-public class Weapon : ScriptableObject
+public class Weapon
 {
     public WeaponController controller { get; private set; }
 
-    public new string name;
+    public string name;
     public string tooltip;
 
     // This exists purely to allow me to add more frames easily later, not for inital use
     private const int MaxFrames = 1;
-    public List<Frame> frames = new List<Frame>(MaxFrames);
+    public List<Frame> frames = new List<Frame> { null };
 
     [NonSerialized]
     public int activeFrame = 0;
@@ -24,7 +24,16 @@ public class Weapon : ScriptableObject
     public delegate void FrameChange(Frame frame, List<Mod> mods);
     public static event FrameChange OnFrameChange;
 
-    public virtual void Intialize(WeaponController weapon) 
+    public Weapon()
+    {
+        // Make the default weapon
+        name = "Default Weapon";
+        tooltip = "Your Basic Weapon, not sure if you should have this. Check with Jack";
+
+        modBudget = 5;
+    }
+
+    public virtual void Initialize(WeaponController weapon) 
     {
         controller = weapon;
 
@@ -57,9 +66,9 @@ public class Weapon : ScriptableObject
     {
         frames[activeFrame].ActivatePrimary();
     }
-    public void UseFrameSecondary()
+    public void UseFrameRefill()
     {
-        frames[activeFrame].ActivateSecondary();
+        frames[activeFrame].ActivateRefill();
     }
 
     public virtual void CalculateStats() { }
@@ -71,6 +80,12 @@ public class Weapon : ScriptableObject
             activeFrame = 0;
 
         OnFrameChange?.Invoke(frames[activeFrame], mods);
+    }
+    public virtual void SwapFrame(Frame frame)
+    {
+        activeFrame = 0;
+        frames[0] = frame;
+        Initialize(controller);
     }
 
 }

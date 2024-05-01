@@ -177,7 +177,7 @@ public class PlayerController : MonoBehaviour
         {
             if (wallRunTimer > 0)
             {
-                currentMove = maxNormalSpeed * 1.5f * wallRunController.wallParallel;
+                currentMove = maxNormalSpeed * 2f * wallRunController.wallParallel;
                 wallRunTimer -= Time.deltaTime;
             }
             else

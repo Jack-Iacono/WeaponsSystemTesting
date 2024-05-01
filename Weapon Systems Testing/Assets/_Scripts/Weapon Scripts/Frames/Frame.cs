@@ -7,7 +7,7 @@ using UnityEngine;
 public abstract class Frame : ScriptableObject
 {
     public string frameName;
-    public int modID;
+    public int ID;
     [TextArea]
     public string tooltip;
 
@@ -57,11 +57,14 @@ public abstract class Frame : ScriptableObject
     #endregion
 
     public abstract void ActivatePrimary();
-    public abstract void ActivateSecondary();
+    public abstract void ActivateRefill();
 
     public virtual void Initialize(Weapon connectedWeapon)
     {
         this.connectedWeapon = connectedWeapon;
+
+        timerManager = new TimerManager();
+        frameBehavior = new Tree("Frame Behavior");
 
         // Initialize the timers
         timerManager.Add(ActivateSequenceKey, new Timer(1, ActivateTimerCallback));
@@ -161,6 +164,15 @@ public abstract class Frame : ScriptableObject
     }
 
     #endregion
+
+    #region Helper Scripts
+
+    public override string ToString()
+    {
+        return ID + "/" + frameName;
+    }
+
+    #endregion
 }
 
 public abstract class RangedFrame : Frame
@@ -174,7 +186,7 @@ public abstract class RangedFrame : Frame
             frameBehavior.StartSequence(ActivateSequenceKey);
         }
     }
-    public override void ActivateSecondary()
+    public override void ActivateRefill()
     {
         if (frameBehavior.GetCurrentSequenceName() == ReadySequenceKey)
         {

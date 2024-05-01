@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68c0af78dbeb10642b3e058e2950cecc, type: 3}
   m_Name: Testing Hitscan Frame
   m_EditorClassIdentifier: 
-  frameName: 
+  frameName: Hitscan Frame
+  ID: 0
   tooltip: 
   baseStats:
     autoUse: 1

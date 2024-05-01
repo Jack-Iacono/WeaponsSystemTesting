@@ -4,7 +4,7 @@ using UnityEngine;
 public class Mod : ScriptableObject
 {
     public string modName;
-    public int modID;
+    public int ID;
     [TextArea]
     public string tooltip;
 
