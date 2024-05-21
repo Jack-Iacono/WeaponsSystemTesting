@@ -7,6 +7,7 @@ using UnityEngine;
 public abstract class Frame : ScriptableObject
 {
     public string frameName;
+    public int ID;
     [TextArea]
     public string tooltip;
 
@@ -31,10 +32,11 @@ public abstract class Frame : ScriptableObject
 
     #endregion
 
-    #region Behavior Tree
+    #region State Machine
 
     protected Node.Status status = Node.Status.RUNNING;
 
+    // While this is called a tree, it functions more like a State Machine
     public Tree frameBehavior = new Tree("Frame Behavior");
 
     protected Sequence activateActions;
@@ -55,37 +57,55 @@ public abstract class Frame : ScriptableObject
 
     #endregion
 
+    /// <summary>
+    /// Activate the primary mode of attack for the weapon frame
+    /// </summary>
     public abstract void ActivatePrimary();
-    public abstract void ActivateSecondary();
+    /// <summary>
+    /// Activate the refill action for the weapon frame
+    /// </summary>
+    public abstract void ActivateRefill();
 
+    /// <summary>
+    /// Initializes various systems for the frame
+    /// </summary>
+    /// <param name="connectedWeapon">The weapon that this frame is attached to</param>
     public virtual void Initialize(Weapon connectedWeapon)
     {
         this.connectedWeapon = connectedWeapon;
+
+        timerManager = new TimerManager();
+        frameBehavior = new Tree("Frame Behavior");
 
         // Initialize the timers
         timerManager.Add(ActivateSequenceKey, new Timer(1, ActivateTimerCallback));
         timerManager.Add(BurstTimerKey, new Timer(1, BurstTimerCallback));
         timerManager.Add(RefillSequenceKey, new Timer(1, RefillTimerCallback));
         
+        // Create the activation sequence
         activateActions = new Sequence(ActivateSequenceKey);
         activateActions.AddChild(new Action("BeginActivate", BeginActivate));
         activateActions.AddChild(new Action("UpdateActivate", UpdateActivate));
         activateActions.AddChild(new Action("EndActivate", EndActivate));
 
+        // Create the refill sequence
         refillActions = new Sequence(RefillSequenceKey);
         refillActions.AddChild(new Action("BeginRefill", BeginRefill));
         refillActions.AddChild(new Action("UpdateRefill", UpdateRefill));
         refillActions.AddChild(new Action("EndRefill", EndRefill));
 
+        // Create the ready sequence
         readyActions = new Sequence(ReadySequenceKey);
         readyActions.AddChild(new Action("BeginReady", BeginReady));
         readyActions.AddChild(new Action("UpdateReady", UpdateReady));
         readyActions.AddChild(new Action("EndReady", EndReady));
 
+        // Add the sequences to the tree
         frameBehavior.AddChild(readyActions);
         frameBehavior.AddChild(activateActions);
         frameBehavior.AddChild(refillActions);
 
+        // Start the ready sequence
         frameBehavior.StartSequence(ReadySequenceKey);
 
         activationBusy = false;
@@ -96,20 +116,17 @@ public abstract class Frame : ScriptableObject
         //controls the behavior of the method
         if (status == Node.Status.RUNNING)
         {
+            // Check the status of the current Sequence
             status = frameBehavior.Check();
         }
         else if (status == Node.Status.SUCCESS)
         {
-            switch (frameBehavior.GetCurrentSequenceName())
-            {
-                default:
-                    frameBehavior.StartSequence(ReadySequenceKey);
-                    break;
-            }
-
+            // Start the ready sequence whenever any sequence is finished
+            frameBehavior.StartSequence(ReadySequenceKey);
             status = frameBehavior.Check();
         }
 
+        //
         timerManager.IncrementTimers(dt);
     }
 
@@ -148,6 +165,10 @@ public abstract class Frame : ScriptableObject
 
     #region Stat Related Methods
 
+    /// <summary>
+    /// Calculates the stat totals for the frame
+    /// </summary>
+    /// <param name="mods">The modifications to apply to the frame</param>
     public abstract void CalculateStats(List<Mod> mods);
 
     #endregion
@@ -157,6 +178,15 @@ public abstract class Frame : ScriptableObject
     protected void NotifyFrameDataChange()
     {
         OnFrameDataChange?.Invoke(this);
+    }
+
+    #endregion
+
+    #region Helper Scripts
+
+    public override string ToString()
+    {
+        return ID + "/" + frameName;
     }
 
     #endregion
@@ -173,40 +203,62 @@ public abstract class RangedFrame : Frame
             frameBehavior.StartSequence(ActivateSequenceKey);
         }
     }
-    public override void ActivateSecondary()
+    public override void ActivateRefill()
     {
         if (frameBehavior.GetCurrentSequenceName() == ReadySequenceKey)
         {
             frameBehavior.StartSequence(RefillSequenceKey);
         }
     }
+
+    /// <summary>
+    /// "Fires" the frame causing whatever kind of attack/projectile to be instantiated/used
+    /// </summary>
+    /// <param name="origin">The origin of the projecile</param>
+    /// <param name="angleOffset">A normalized vector representing a deviation from the origin that the projectile should travel to</param>
     protected abstract void Fire(Transform origin, Vector3 angleOffset);
 
     #region Behavior Methods
 
     protected override Node.Status BeginActivate()
     {
+        // Reset the burst length
         burstRemaining = currentStats.burstLength;
 
         return Node.Status.SUCCESS;
     }
     protected override Node.Status UpdateActivate() 
     {
+        // If there is more burst remaining
         if (burstRemaining > 0)
         {
+            // If the amount of ammo remaining is less than the ammo cost per shot
             if(currentAmmo >= currentStats.ammoPerShot)
             {
+                // If the burst is not already going
                 if (!burstActivationBusy)
                 {
+                    // Fires a shot for each bullet in the spread
+                    // The first bullet will be fired straight toward the reticle
+                    // Each subsequent bullet will be fired with a rendom deviation from the center determined by the shotSpreadAngle variable
                     for(int i = 0; i < currentStats.shotsInSpread; i++)
                     {
                         if(i == 0)
+                        {
+                            // Fires a bullet straight toward the reticle
                             Fire(connectedWeapon.controller.projectileSpawnPoint, Vector3.zero);
+                        }
                         else
+                        {
+                            // Fires a bullet with a random spread
                             Fire(connectedWeapon.controller.projectileSpawnPoint, new Vector3(UnityEngine.Random.Range(-currentStats.spreadAngle, currentStats.spreadAngle), UnityEngine.Random.Range(-currentStats.spreadAngle, currentStats.spreadAngle), UnityEngine.Random.Range(-currentStats.spreadAngle, currentStats.spreadAngle)));
+                        }
                     }
 
+                    // Decrement the amount remaining in the burst
                     burstRemaining--;
+
+                    // Subtract the amount of ammo the player has in their "magazine"
                     currentAmmo -= currentStats.ammoPerShot;
 
                     burstActivationBusy = true;
@@ -233,6 +285,7 @@ public abstract class RangedFrame : Frame
     }
     protected override Node.Status EndActivate()
     {
+        // Check if the activation is over or if the weapon is out of ammo
         if (!activationBusy || currentAmmo == 0)
         {
             activationBusy = false;
@@ -250,14 +303,17 @@ public abstract class RangedFrame : Frame
     }
     protected override Node.Status UpdateRefill()
     {
+        // Checks to see if the weapon needs ammo and that the refill is not already occuring
         if(currentAmmo < currentStats.readyAmmo && !refillBusy)
         {
+            // If the refillAmount is 0, refill everything at once
             if(currentStats.refillAmount == 0)
             {
                 currentAmmo = currentStats.readyAmmo;
                 NotifyFrameDataChange();
                 return Node.Status.SUCCESS;
             }
+            // Refill ammo by the refill amount variable
             else
             {
                 currentAmmo = Mathf.Clamp(currentAmmo + currentStats.refillAmount, 0, currentStats.readyAmmo);
@@ -300,17 +356,20 @@ public abstract class RangedFrame : Frame
         // Gets the stats that derive from the frame itself
         currentStats = new FrameStats();
         currentStats += baseStats;
-
+        
+        // Loop through the mods and add their stats to this frame
         foreach(Mod m in mods)
         {
             Debug.Log($"Adding {m.modName} to the frame");
             currentStats += m.frameStats;
         }
 
+        // Reset the timer times and set them up for use
         timerManager.timers[ActivateSequenceKey].SetMaxTime(currentStats.useTime);
         timerManager.timers[BurstTimerKey].SetMaxTime(currentStats.burstSpeed);
         timerManager.timers[RefillSequenceKey].SetMaxTime(currentStats.refillSpeed);
 
+        // Reset the ammo count in the "magazine"
         currentAmmo = currentStats.readyAmmo;
     }
 }

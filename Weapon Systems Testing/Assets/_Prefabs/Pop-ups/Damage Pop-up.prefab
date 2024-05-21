@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6737564389918420377}
   - component: {fileID: 7491092794863837389}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Damage Pop-up
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -46,12 +46,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   text: {fileID: 8498414237314550685}
-  lifetime: 2
-  movementAmp: 5
-  gravity: 9.8
+  lifetime: 1
+  movementAmp: 6
+  gravity: 15
   xVar: {x: -0.2, y: 0.2}
   yVar: {x: 0.8, y: 1}
-  zVar: {x: 0.1, y: 0.1}
+  zVar: {x: 0, y: 0}
 --- !u!1 &4678809823969269699
 GameObject:
   m_ObjectHideFlags: 0
@@ -63,7 +63,7 @@ GameObject:
   - component: {fileID: 2792324395935149661}
   - component: {fileID: 6253109270631784724}
   - component: {fileID: 8498414237314550685}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}

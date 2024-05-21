@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5db3968599789f2418d9fb26ff131f36, type: 3}
   m_Name: Testing Projectile Frame 2
   m_EditorClassIdentifier: 
+  frameName: Projectile Frame
+  ID: 1
+  tooltip: 
   baseStats:
-    name: 
-    tooltip: 
     autoUse: 1
     useTime: 1
     damage: 115
@@ -24,8 +25,10 @@ MonoBehaviour:
     hipFire: 0
     usePrimaryAmmo: 0
     readyAmmo: 10
-    reserveAmmo: 0
+    maxReserveAmmo: 0
     ammoPerShot: 0
+    refillSpeed: 0
+    refillAmount: 0
     burstLength: 1
     burstSpeed: 0.01
     doAreaDamage: 0

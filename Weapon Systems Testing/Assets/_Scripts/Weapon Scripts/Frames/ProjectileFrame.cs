@@ -27,19 +27,25 @@ public class ProjectileFrame : RangedFrame
         direction = (direction + angleOffset - rayOrigin).normalized;
 
         Ray ray = new Ray(rayOrigin, direction);
-        Vector3 velocity;
+        Vector3 currentMove;
 
+        // The below code is used to mimic accuracy despite the projectiles coming from a gun that is not necessarily pointing
+        //  in the direction that the projectiles should move
+
+        // If the reticle is on an object, make the projectile move in that general direction
         if (Physics.Raycast(ray, out hit, currentStats.range, interactionLayers))
         {
-            velocity = (hit.point - origin.position).normalized * projectileCurrentStats.projectileSpeed;
+            currentMove = (hit.point - origin.position).normalized * projectileCurrentStats.projectileSpeed;
         }
+        // If not, have the projectile move in a straight line
         else
         {
-            velocity = (ray.GetPoint(10) - origin.position).normalized * projectileCurrentStats.projectileSpeed;
+            currentMove = (ray.GetPoint(10) - origin.position).normalized * projectileCurrentStats.projectileSpeed;
         }
 
+        // Set up the projectile
         GameObject projectile = ObjectPool.instance.GetPooledObject(projectileCurrentStats.spawnedProjectile.name);
-        projectile.GetComponent<ProjectileController>().StartProjectile(this, origin, velocity, projectileCurrentStats.projectileMass);
+        projectile.GetComponent<ProjectileController>().StartProjectile(this, origin, currentMove, projectileCurrentStats.projectileMass);
     }
 }
 
