@@ -29,10 +29,12 @@ public class ProjectileController : MonoBehaviour, Interactable
 
     private void OnCollisionEnter(Collision collision)
     {
+        // Check if the layermask that is being collided with is one which is within the collision layers for this object
         if (HelperScripts.LayermaskContains(projectile.interactLayers, collision.gameObject.layer))
         {
             Interactable col;
 
+            // Check if this collider is an Interactable
             if (collision.gameObject.TryGetComponent(out col))
                 col.ProjectileHit(this);
 
@@ -42,13 +44,17 @@ public class ProjectileController : MonoBehaviour, Interactable
                 case Projectile.CollisionAction.DESTROY:
                     StopProjectile();
                     break;
-                case Projectile.CollisionAction.BOUNCE:
-                    
-                    break;
             }
         }
     }
 
+    /// <summary>
+    /// Begins the projectile's movement
+    /// </summary>
+    /// <param name="parentFrame">The frame that this projectile came from</param>
+    /// <param name="origin">The spawn point of this projectile</param>
+    /// <param name="currentMove">The movement that should be applied to the projectile</param>
+    /// <param name="mass">The mass that this projectile should have</param>
     public void StartProjectile(Frame parentFrame, Transform origin, Vector3 currentMove, float mass = 1)
     {
         gameObject.SetActive(true);

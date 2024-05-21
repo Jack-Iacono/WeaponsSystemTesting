@@ -31,28 +31,55 @@ public class InventoryController : MonoBehaviour
     }
 
     #region Inventory Access Methods
+
+    /// <summary>
+    /// Adds a mod to the list of mods within the player's inventory
+    /// </summary>
+    /// <param name="m">The mod that is being added</param>
     public void AddMod(Mod m)
     {
         modList.Add(m);
     }
+    /// <summary>
+    /// Removes a mod to the list of mods within the player's inventory
+    /// </summary>
+    /// <param name="m">The mod that is being removed</param>
     public void RemoveMod(Mod m)
     {
+        // If the player has the given mode, remove it
         if(modList.Contains(m))
             modList.Remove(m);
     }
+    /// <summary>
+    /// Adds a frame to the list of frames within the player's inventory
+    /// </summary>
+    /// <param name="m">The frame that is being added</param>
     public void AddFrame(Frame f)
     {
         frameList.Add(f);
     }
+    /// <summary>
+    /// Removes a frame to the list of frames within the player's inventory
+    /// </summary>
+    /// <param name="m">The frame that is being removed</param>
     public void RemoveFrame(Frame f)
     {
+        // Checks to see if the player has this frame and, if so, removes it
         if (frameList.Contains(f))
             frameList.Remove(f);
     }
+    /// <summary>
+    /// Adds a weapon to the list of weapons within the player's inventory
+    /// </summary>
+    /// <param name="m">The weapon that is being added</param>
     public void AddWeapon(Weapon w)
     {
         weaponList.Add(w);
     }
+    /// <summary>
+    /// Removes a weapon to the list of weapons within the player's inventory
+    /// </summary>
+    /// <param name="m">The weapon that is being removed</param>
     public void RemoveWeapon(Weapon w)
     {
         if (weaponList.Contains(w))
@@ -62,6 +89,10 @@ public class InventoryController : MonoBehaviour
 
     #region Function Methods
 
+    /// <summary>
+    /// Changes the frame on the currently equipped weapon
+    /// </summary>
+    /// <param name="index">The index of the frame to swap</param>
     public void ChangeFrame(int index)
     {
         WeaponController.instance.currentWeapon.SwapFrame(frameList[index]);

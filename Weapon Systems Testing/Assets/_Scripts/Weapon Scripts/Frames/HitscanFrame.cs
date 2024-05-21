@@ -23,6 +23,7 @@ public class HitscanFrame : RangedFrame
 
             Interactable col;
 
+            // If the object has an interactable component, call the HitScanHit function on it
             if (hit.collider.gameObject.TryGetComponent(out col))
                 col.HitScanHit(this, hit.point);
         }

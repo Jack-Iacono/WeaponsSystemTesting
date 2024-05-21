@@ -44,6 +44,11 @@ public class ObjectPool : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Gets a GameObject from the pool of objects
+    /// </summary>
+    /// <param name="name">The name of the object that is being requested</param>
+    /// <returns>The GameObject if the object is pooled, null otherwise</returns>
     public GameObject GetPooledObject(string name)
     { 
         // Find the first object that is not being used
@@ -62,26 +67,48 @@ public class ObjectPool : MonoBehaviour
         return _pooledObjects[name][_pooledObjects.Count - 1];
     }
 
-    // Gets the original pooled object scriptable object
+    /// <summary>
+    /// Gets the PooledObject with the given name
+    /// </summary>
+    /// <param name="name">The name of the PooledObject to find</param>
+    /// <returns>The PooledObject, null if the PooledObject is not found</returns>
     private PooledObject GetPoolObject(string name)
     {
+        // Run through the list of PooledObjects
         foreach(PooledObject p in _objectsToPool)
         {
+            // Check if the pooled object is the one that is being seatched for
             if(p.name == name)
             {
+                // Return the object
                 return p;
             }
         }
 
+        // Could not find the given object
         Debug.Log("Object " + name + " not found, check name");
         return null;
     }
 
+    /// <summary>
+    /// Creates a new GameObject to add to the pool
+    /// </summary>
+    /// <param name="obj">The gameobject to Instantiate</param>
+    /// <param name="parent">The parent to assign to the new object</param>
+    /// <returns></returns>
     private GameObject InstantiateObject(GameObject obj, Transform parent)
     {
+        // Instantiate the Object
         GameObject g = Instantiate(obj, parent);
+
+        // Run the Initialize function on the new object
+        // Look into the performance cost of this later
         g.SendMessage("Initialize", SendMessageOptions.DontRequireReceiver);
+
+        // Set the object to be inactive
         g.SetActive(false);
+
+        // return the object
         return g;
     }
 }

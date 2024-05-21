@@ -39,10 +39,13 @@ public class WeaponController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Check if the game is paused
         if (!GameController.isGamePaused)
         {
+            // Ensure that the current frame is not null
             if (currentWeapon.frames[currentWeapon.activeFrame] != null)
             {
+                // Check if there is input to use the frame
                 if (
                 (currentWeapon.frames[currentWeapon.activeFrame].currentStats.autoUse && Input.GetKey(framePrimaryKey)) ||
                 (!currentWeapon.frames[currentWeapon.activeFrame].currentStats.autoUse && Input.GetKeyDown(framePrimaryKey))
